@@ -1,13 +1,10 @@
-import React from "react";
+import React from 'react';
 // import { Container, Row, Col, Nav } from 'react-bootstrap';
-import Chart from "chart.js";
 // react plugin used to create charts
-import { Line, Bar } from "react-chartjs-2";
+import { Line } from 'react-chartjs-2';
 // reactstrap components
 import {
-  Badge,
   Button,
-  ButtonDropdown,
   ButtonGroup,
   ButtonToolbar,
   Card,
@@ -18,26 +15,25 @@ import {
   Progress,
   Row,
   Container
-} from "reactstrap";
+} from 'reactstrap';
 
-import { CustomTooltips } from "@coreui/coreui-plugin-chartjs-custom-tooltips";
-import { getStyle } from "@coreui/coreui/dist/js/coreui-utilities";
+import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
+import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
 
-const brandSuccess = getStyle("--success");
-const brandInfo = getStyle("--info");
-const brandDanger = getStyle("--danger");
+const brandSuccess = getStyle('--success');
+const brandInfo = getStyle('--info');
+const brandDanger = getStyle('--danger');
 
-//Random Numbers
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
+const elements = 27;
+const data1 = [];
+const data2 = [];
+const data3 = [];
 
-for (var i = 0; i <= elements; i++) {
+for (let i = 0; i <= elements; i += 1) {
   data1.push(random(50, 200));
   data2.push(random(80, 100));
   data3.push(65);
@@ -48,10 +44,10 @@ const mainChartOpts = {
     enabled: false,
     custom: CustomTooltips,
     intersect: true,
-    mode: "index",
-    position: "nearest",
+    mode: 'index',
+    position: 'nearest',
     callbacks: {
-      labelColor: function(tooltipItem, chart) {
+      labelColor: (tooltipItem, chart) => {
         return {
           backgroundColor:
             chart.data.datasets[tooltipItem.datasetIndex].borderColor
@@ -97,63 +93,61 @@ class IncomeStatistic extends React.Component {
     super(props);
 
     this.state = {
-      activeNav: 1,
-      chartExample1Data: "data1",
       dropdownOpen: false,
       radioSelected: 2,
       mainChart: {
         labels: [
-          "Mo",
-          "Tu",
-          "We",
-          "Th",
-          "Fr",
-          "Sa",
-          "Su",
-          "Mo",
-          "Tu",
-          "We",
-          "Th",
-          "Fr",
-          "Sa",
-          "Su",
-          "Mo",
-          "Tu",
-          "We",
-          "Th",
-          "Fr",
-          "Sa",
-          "Su",
-          "Mo",
-          "Tu",
-          "We",
-          "Th",
-          "Fr",
-          "Sa",
-          "Su"
+          'Mo',
+          'Tu',
+          'We',
+          'Th',
+          'Fr',
+          'Sa',
+          'Su',
+          'Mo',
+          'Tu',
+          'We',
+          'Th',
+          'Fr',
+          'Sa',
+          'Su',
+          'Mo',
+          'Tu',
+          'We',
+          'Th',
+          'Fr',
+          'Sa',
+          'Su',
+          'Mo',
+          'Tu',
+          'We',
+          'Th',
+          'Fr',
+          'Sa',
+          'Su'
         ],
         datasets: [
           {
-            label: "My First dataset",
-            backgroundColor: "#EFF9FC",
+            label: 'My First dataset',
+            backgroundColor: '#EFF9FC',
             borderColor: brandInfo,
-            pointHoverBackgroundColor: "#fff",
+            pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: data1
           },
           {
-            label: "My Second dataset",
-            backgroundColor: "transparent",
+            label: 'My Second dataset',
+            backgroundColor: 'transparent',
             borderColor: brandSuccess,
-            pointHoverBackgroundColor: "#fff",
+            pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: data2
           },
           {
-            label: "My Third dataset",
-            backgroundColor: "transparent",
+            label: 'My Third dataset',
+            backgroundColor: 'transparent',
             borderColor: brandDanger,
-            pointHoverBackgroundColor: "#fff",
+            pointHoverBackgroundColor: '#fff',
             borderWidth: 1,
             borderDash: [8, 5],
             data: data3
@@ -163,15 +157,9 @@ class IncomeStatistic extends React.Component {
     };
   }
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen
-    });
-  }
-
   onRadioBtnClick(radioSelected) {
     this.setState({
-      radioSelected: radioSelected
+      radioSelected
     });
   }
 
@@ -179,8 +167,15 @@ class IncomeStatistic extends React.Component {
     <div className="animated fadeIn pt-1 text-center">Loading...</div>
   );
 
+  toggle() {
+    const { dropdownOpen } = this.state;
+    this.setState({
+      dropdownOpen: !dropdownOpen
+    });
+  }
+
   render() {
-    const { mainChart } = this.state;
+    const { mainChart, radioSelected } = this.state;
     return (
       <Container>
         <Row>
@@ -202,21 +197,21 @@ class IncomeStatistic extends React.Component {
                         <Button
                           color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(1)}
-                          active={this.state.radioSelected === 1}
+                          active={radioSelected === 1}
                         >
                           Day
                         </Button>
                         <Button
                           color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(2)}
-                          active={this.state.radioSelected === 2}
+                          active={radioSelected === 2}
                         >
                           Month
                         </Button>
                         <Button
                           color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(3)}
-                          active={this.state.radioSelected === 3}
+                          active={radioSelected === 3}
                         >
                           Year
                         </Button>
@@ -226,7 +221,7 @@ class IncomeStatistic extends React.Component {
                 </Row>
                 <div
                   className="chart-wrapper"
-                  style={{ height: 300 + "px", marginTop: 40 + "px" }}
+                  style={{ height: '300px', marginTop: '40px' }}
                 >
                   <Line data={mainChart} options={mainChartOpts} height={300} />
                 </div>

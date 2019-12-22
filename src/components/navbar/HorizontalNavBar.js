@@ -1,8 +1,7 @@
-import React from "react";
-import "@trendmicro/react-sidenav/dist/react-sidenav.css";
-import "./navbar.css";
-import { Navbar, NavDropdown, Container, Nav } from "react-bootstrap";
-import { NavLink } from "reactstrap";
+import React from 'react';
+import '@trendmicro/react-sidenav/dist/react-sidenav.css';
+import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
+import './navbar.css';
 
 class HorizontalNavBar extends React.Component {
   constructor(props) {
@@ -19,9 +18,9 @@ class HorizontalNavBar extends React.Component {
         variant="dark"
         // className="fixed-top"
 
-        style={{ background: "#1D4575" }}
+        style={{ background: '#1D4575' }}
       >
-        <Navbar.Brand href="/" style={{ fontWeight: "bold" }}>
+        <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>
           Dashboard
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -47,14 +46,14 @@ class HorizontalNavBar extends React.Component {
               title={
                 <div
                   className="pull-left dropdown-title"
-                  style={{ display: "inline" }}
+                  style={{ display: 'inline' }}
                 >
                   <img
                     className="thumbnail-image rounded-circle"
                     src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
                     alt="user pic"
                   />
-                  <div style={{ display: "inline" }} className="ml-3">
+                  <div style={{ display: 'inline' }} className="ml-3">
                     Nguyễn Hữu Tú
                   </div>
                 </div>

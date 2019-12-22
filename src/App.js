@@ -1,29 +1,29 @@
-import React from "react";
+import React from 'react';
 import {
   Route,
   BrowserRouter as Router,
   Redirect,
   Switch
-} from "react-router-dom";
-import { MDBAlert } from "mdbreact";
-import { connect } from "react-redux";
-import "./App.css";
-import Login from "./components/login/Login";
-import history from "./helpers/history";
-import alertActions from "./actions/alert.action";
-import { PrivateRoute } from "./components/privateRoute/PrivateRoute";
-import Dashboard from "./components/dashboard/dashboard";
+} from 'react-router-dom';
+import { MDBAlert } from 'mdbreact';
+import { connect } from 'react-redux';
+import Drawer from '@material-ui/core/Drawer';
 
-import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import HorizontalNavBar from "./components/navbar/HorizontalNavBar";
-import TvIcon from "@material-ui/icons/Tv";
-import "./components/navbar/navbar.css";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import AppBar from '@material-ui/core/AppBar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import TvIcon from '@material-ui/icons/Tv';
+import HorizontalNavBar from './components/navbar/HorizontalNavBar';
+import Dashboard from './components/dashboard/dashboard';
+import { PrivateRoute } from './components/privateRoute/PrivateRoute';
+import alertActions from './actions/alert.action';
+import history from './helpers/history';
+import Login from './components/login/Login';
+import './App.css';
+import './components/navbar/navbar.css';
 
 const drawerWidth = 240;
 
@@ -41,7 +41,7 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <CssBaseline />
           <AppBar
             position="fixed"
@@ -63,14 +63,14 @@ class App extends React.Component {
             <img
               alt="logo"
               src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576945232/Tutor/20160816-Smarter-tutoring-logo-for-WordPress-banner_navy-blue-01-2-705x323_izss7b.png"
-              style={{ width: "150px" }}
+              style={{ width: '150px' }}
               className="mx-auto mt-4"
-            ></img>
+            />
 
             <List className="mt-5">
               <ListItem button selected>
                 <ListItemIcon>
-                  <TvIcon style={{ color: "#1D4575" }} />
+                  <TvIcon style={{ color: '#1D4575' }} />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
               </ListItem>
@@ -80,9 +80,9 @@ class App extends React.Component {
             style={{
               flexGrow: 1,
               // backgroundColor: theme.palette.background.default,
-              paddingRight: "24px",
-              paddingBottom: "24px",
-              paddingTop: "86px"
+              paddingRight: '24px',
+              paddingBottom: '24px',
+              paddingTop: '86px'
             }}
           >
             <Router history={history}>

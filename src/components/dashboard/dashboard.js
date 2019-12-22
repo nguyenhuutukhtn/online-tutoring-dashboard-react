@@ -1,9 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import userActions from "../../actions/user.action";
-import { Container, Row, Col } from "react-bootstrap";
-import "./dashboard.css";
-import IncomeStatistic from "../statistics/IncomStatistic";
+import React from 'react';
+import { connect } from 'react-redux';
+import { Container, Row, Col } from 'react-bootstrap';
+import userActions from '../../actions/user.action';
+import './dashboard.css';
+import IncomeStatistic from '../statistics/IncomStatistic';
 
 class Dashboard extends React.Component {
   constructor(props) {
