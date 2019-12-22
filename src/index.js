@@ -4,7 +4,8 @@ import { render } from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import Login from "./components/login/Login";
 import store from "./helpers/store";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,10 +17,12 @@ import "../node_modules/mdbreact/dist/css/mdb.css";
 
 render(
   <Provider store={store}>
-    {/* <BrowserRouter>
-      <App />
-    </BrowserRouter> */}
-    <App />
+    <BrowserRouter>
+      <Switch>
+        <Route path="/login" render={props => <Login {...props} />} />
+        <Route path="/" render={props => <App {...props} />} />
+      </Switch>
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

@@ -12,18 +12,27 @@ import Login from "./components/login/Login";
 import history from "./helpers/history";
 import alertActions from "./actions/alert.action";
 import { PrivateRoute } from "./components/privateRoute/PrivateRoute";
-import Footer from "./components/footer/Footer";
 import Dashboard from "./components/dashboard/dashboard";
+
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import AppBar from "@material-ui/core/AppBar";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import HorizontalNavBar from "./components/navbar/HorizontalNavBar";
+import TvIcon from "@material-ui/icons/Tv";
+import "./components/navbar/navbar.css";
+
+const drawerWidth = 240;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     history.listen(() => {
-      // clear alert on location change
-      const { clearAlerts } = this.props;
-      clearAlerts();
       window.location.reload();
-      // console.log('history change');
     });
   }
 
@@ -32,22 +41,67 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        <Router history={history}>
-          {alert.message && (
-            <MDBAlert className={`alert text-center ${alert.type}`}>
-              {alert.message}
-            </MDBAlert>
-          )}
-          <div className="main-route-place">
-            <Switch>
-              <Route path="/login" component={Login} />
-              <PrivateRoute path="/" component={Dashboard} />
+        <div style={{ display: "flex" }}>
+          <CssBaseline />
+          <AppBar
+            position="fixed"
+            style={{
+              width: `calc(100% - ${drawerWidth}px)`,
+              marginLeft: drawerWidth
+            }}
+          >
+            <HorizontalNavBar />
+          </AppBar>
+          <Drawer
+            style={{
+              width: drawerWidth,
+              flexShrink: 0
+            }}
+            variant="permanent"
+            anchor="left"
+          >
+            <img
+              alt="logo"
+              src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576945232/Tutor/20160816-Smarter-tutoring-logo-for-WordPress-banner_navy-blue-01-2-705x323_izss7b.png"
+              style={{ width: "150px" }}
+              className="mx-auto mt-4"
+            ></img>
 
-              <Redirect from="*" to="/" />
-            </Switch>
-          </div>
-          <Footer />
-        </Router>
+            <List className="mt-5">
+              <ListItem button selected>
+                <ListItemIcon>
+                  <TvIcon style={{ color: "#1D4575" }} />
+                </ListItemIcon>
+                <ListItemText primary="Dashboard" />
+              </ListItem>
+            </List>
+          </Drawer>
+          <main
+            style={{
+              flexGrow: 1,
+              // backgroundColor: theme.palette.background.default,
+              paddingRight: "24px",
+              paddingBottom: "24px",
+              paddingTop: "86px"
+            }}
+          >
+            <Router history={history}>
+              {alert.message && (
+                <MDBAlert className={`alert text-center ${alert.type}`}>
+                  {alert.message}
+                </MDBAlert>
+              )}
+              <div className="main-route-place">
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <PrivateRoute path="/" component={Dashboard} />
+
+                  <Redirect from="*" to="/" />
+                </Switch>
+              </div>
+            </Router>
+          </main>
+        </div>
       </div>
     );
   }

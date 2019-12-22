@@ -1,6 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import userActions from "../../actions/user.action";
+import { Container, Row, Col } from "react-bootstrap";
+import "./dashboard.css";
+import IncomeStatistic from "../statistics/IncomStatistic";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -9,21 +12,22 @@ class Dashboard extends React.Component {
     // reset login status
     // this.props.logout();
 
-    this.state = {
-      username: "",
-      password: "",
-      submitted: false,
-      loading: true
-    };
+    this.state = {};
   }
 
   componentDidMount() {}
 
   render() {
     return (
-      <>
-        <div>hahahahahah</div>
-      </>
+      <div>
+        <Container>
+          <Row>
+            <Col md="8">
+              <IncomeStatistic />
+            </Col>
+          </Row>
+        </Container>
+      </div>
     );
   }
 }
