@@ -1,0 +1,12 @@
+.align-items-center {
+  align-items: center !important;
+}
+
+.table.align-items-center td,
+.table.align-items-center th {
+  vertical-align: middle;
+}
+
+.container-top-skill {
+  padding-right: 0 !important;
+}

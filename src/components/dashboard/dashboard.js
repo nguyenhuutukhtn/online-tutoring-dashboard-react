@@ -5,6 +5,8 @@ import userActions from '../../actions/user.action';
 import './dashboard.css';
 import IncomeStatistic from '../statistics/IncomStatistic';
 import GeneralStatistic from './GeneralStatistic';
+import TopTutor from '../statistics/TopTutor';
+import TopSkill from '../statistics/TopSkill';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -30,6 +32,14 @@ class Dashboard extends React.Component {
           <Row>
             <Col md="12" className="mt-4">
               <IncomeStatistic />
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col md="7">
+              <TopSkill />
+            </Col>
+            <Col md="5" className="ml-0">
+              <TopTutor />
             </Col>
           </Row>
         </Container>
