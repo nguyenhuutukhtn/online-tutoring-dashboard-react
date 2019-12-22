@@ -1,0 +1,17 @@
+.align-items-center {
+  align-items: center !important;
+}
+
+.table.align-items-center td,
+.table.align-items-center th {
+  vertical-align: middle;
+}
+
+.table-button {
+  padding: 5px !important;
+  text-transform: capitalize !important;
+}
+
+.no-padding-top {
+  padding-top: 0 !important;
+}

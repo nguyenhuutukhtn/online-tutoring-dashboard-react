@@ -8,7 +8,6 @@ import {
 import { MDBAlert } from 'mdbreact';
 import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
-
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import List from '@material-ui/core/List';
@@ -16,14 +15,18 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import TvIcon from '@material-ui/icons/Tv';
+import PersonIcon from '@material-ui/icons/Person';
+import CardMembershipIcon from '@material-ui/icons/CardMembership';
+import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
+import GroupIcon from '@material-ui/icons/Group';
 import HorizontalNavBar from './components/navbar/HorizontalNavBar';
 import Dashboard from './components/dashboard/dashboard';
 import { PrivateRoute } from './components/privateRoute/PrivateRoute';
 import alertActions from './actions/alert.action';
 import history from './helpers/history';
-import Login from './components/login/Login';
 import './App.css';
 import './components/navbar/navbar.css';
+import ListUser from './components/users/ListUser';
 
 const drawerWidth = 240;
 
@@ -74,6 +77,30 @@ class App extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
               </ListItem>
+              <ListItem button className="mt-2">
+                <ListItemIcon>
+                  <PersonIcon style={{ color: '#FFD600' }} />
+                </ListItemIcon>
+                <ListItemText primary="Tài khoản" />
+              </ListItem>
+              <ListItem button className="mt-2">
+                <ListItemIcon>
+                  <CardMembershipIcon style={{ color: '#FB6340' }} />
+                </ListItemIcon>
+                <ListItemText primary="Kĩ năng" />
+              </ListItem>
+              <ListItem button className="mt-2">
+                <ListItemIcon>
+                  <AssignmentTurnedInIcon style={{ color: '#11CDEF' }} />
+                </ListItemIcon>
+                <ListItemText primary="Hợp đồng" />
+              </ListItem>
+              <ListItem button className="mt-2">
+                <ListItemIcon>
+                  <GroupIcon style={{ color: '#F3A4B5' }} />
+                </ListItemIcon>
+                <ListItemText primary="Khiếu nại" />
+              </ListItem>
             </List>
           </Drawer>
           <main
@@ -92,7 +119,7 @@ class App extends React.Component {
               )}
               <div className="main-route-place">
                 <Switch>
-                  <Route path="/login" component={Login} />
+                  <Route path="/users" component={ListUser} />
                   <PrivateRoute path="/" component={Dashboard} />
 
                   <Redirect from="*" to="/" />
