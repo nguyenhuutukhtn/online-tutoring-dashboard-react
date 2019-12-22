@@ -4,6 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import userActions from '../../actions/user.action';
 import './dashboard.css';
 import IncomeStatistic from '../statistics/IncomStatistic';
+import GeneralStatistic from './GeneralStatistic';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -22,7 +23,12 @@ class Dashboard extends React.Component {
       <div>
         <Container>
           <Row>
-            <Col md="8">
+            <Col>
+              <GeneralStatistic />
+            </Col>
+          </Row>
+          <Row>
+            <Col md="8" className="mt-4">
               <IncomeStatistic />
             </Col>
           </Row>

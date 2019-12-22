@@ -1,28 +1,7 @@
 import React from 'react';
-// import { Container, Row, Col, Nav } from 'react-bootstrap';
-// react plugin used to create charts
 import { Line } from 'react-chartjs-2';
-// reactstrap components
-import {
-  Button,
-  ButtonGroup,
-  ButtonToolbar,
-  Card,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  Col,
-  Progress,
-  Row,
-  Container
-} from 'reactstrap';
-
-import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
-import { getStyle } from '@coreui/coreui/dist/js/coreui-utilities';
-
-const brandSuccess = getStyle('--success');
-const brandInfo = getStyle('--info');
-const brandDanger = getStyle('--danger');
+import { Container, Row, Col, Card, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonGroup } from '@material-ui/core';
 
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -30,61 +9,35 @@ function random(min, max) {
 
 const elements = 27;
 const data1 = [];
-const data2 = [];
-const data3 = [];
 
 for (let i = 0; i <= elements; i += 1) {
   data1.push(random(50, 200));
-  data2.push(random(80, 100));
-  data3.push(65);
 }
 
 const mainChartOpts = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips,
-    intersect: true,
-    mode: 'index',
-    position: 'nearest',
-    callbacks: {
-      labelColor: (tooltipItem, chart) => {
-        return {
-          backgroundColor:
-            chart.data.datasets[tooltipItem.datasetIndex].borderColor
-        };
-      }
-    }
-  },
+  responsive: true,
   maintainAspectRatio: false,
-  legend: {
-    display: false
-  },
   scales: {
     xAxes: [
       {
+        barPercentage: 1,
         gridLines: {
-          drawOnChartArea: false
+          display: true,
+          color: 'rgba(0, 0, 0, 0.1)'
         }
       }
     ],
     yAxes: [
       {
+        gridLines: {
+          display: true,
+          color: 'rgba(0, 0, 0, 0.1)'
+        },
         ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5),
-          max: 250
+          beginAtZero: true
         }
       }
     ]
-  },
-  elements: {
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-      hoverBorderWidth: 3
-    }
   }
 };
 
@@ -95,62 +48,29 @@ class IncomeStatistic extends React.Component {
     this.state = {
       dropdownOpen: false,
       radioSelected: 2,
-      mainChart: {
+      monthChart: {
         labels: [
-          'Mo',
-          'Tu',
-          'We',
-          'Th',
-          'Fr',
-          'Sa',
-          'Su',
-          'Mo',
-          'Tu',
-          'We',
-          'Th',
-          'Fr',
-          'Sa',
-          'Su',
-          'Mo',
-          'Tu',
-          'We',
-          'Th',
-          'Fr',
-          'Sa',
-          'Su',
-          'Mo',
-          'Tu',
-          'We',
-          'Th',
-          'Fr',
-          'Sa',
-          'Su'
+          'Tháng 1',
+          'Tháng 2',
+          'Tháng 3',
+          'Tháng 4',
+          'Tháng 5',
+          'Tháng 6',
+          'Tháng 7',
+          'Tháng 8',
+          'Tháng 9',
+          'Tháng 10',
+          'Tháng 11',
+          'Tháng 12'
         ],
         datasets: [
           {
-            label: 'My First dataset',
+            label: 'Doanh thu',
             backgroundColor: '#EFF9FC',
-            borderColor: brandInfo,
+            borderColor: 'info',
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: data1
-          },
-          {
-            label: 'My Second dataset',
-            backgroundColor: 'transparent',
-            borderColor: brandSuccess,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: data2
-          },
-          {
-            label: 'My Third dataset',
-            backgroundColor: 'transparent',
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 1,
-            borderDash: [8, 5],
-            data: data3
           }
         ]
       }
@@ -175,43 +95,56 @@ class IncomeStatistic extends React.Component {
   }
 
   render() {
-    const { mainChart, radioSelected } = this.state;
+    const { monthChart, radioSelected } = this.state;
     return (
       <Container>
         <Row>
           <Col>
             <Card>
-              <CardBody>
+              <Card.Body>
                 <Row>
                   <Col>
-                    <CardTitle className="mb-0 ml-0 text-left">
+                    <Card.Title className="mb-0 ml-0 text-left">
                       <h5>Biểu đồ doanh thu</h5>
-                    </CardTitle>
+                    </Card.Title>
                   </Col>
                   <Col sm="8" className="d-none d-sm-inline-block">
                     <ButtonToolbar
                       className="float-right"
                       aria-label="Toolbar with button groups"
                     >
-                      <ButtonGroup className="mr-3" aria-label="First group">
+                      <ButtonGroup
+                        color="primary"
+                        aria-label="outlined primary button group"
+                      >
                         <Button
-                          color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(1)}
-                          active={radioSelected === 1}
+                          color="primary"
+                          style={
+                            radioSelected === 1
+                              ? { background: '#ECECEC' }
+                              : null
+                          }
                         >
                           Day
                         </Button>
                         <Button
-                          color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(2)}
-                          active={radioSelected === 2}
+                          style={
+                            radioSelected === 2
+                              ? { background: '#ECECEC' }
+                              : null
+                          }
                         >
                           Month
                         </Button>
                         <Button
-                          color="outline-secondary"
                           onClick={() => this.onRadioBtnClick(3)}
-                          active={radioSelected === 3}
+                          style={
+                            radioSelected === 3
+                              ? { background: '#ECECEC' }
+                              : null
+                          }
                         >
                           Year
                         </Button>
@@ -221,60 +154,15 @@ class IncomeStatistic extends React.Component {
                 </Row>
                 <div
                   className="chart-wrapper"
-                  style={{ height: '300px', marginTop: '40px' }}
+                  style={{ height: '400px', marginTop: '40px' }}
                 >
-                  <Line data={mainChart} options={mainChartOpts} height={300} />
+                  <Line
+                    data={monthChart}
+                    options={mainChartOpts}
+                    height={400}
+                  />
                 </div>
-              </CardBody>
-              <CardFooter>
-                <Row className="text-center">
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Visits</div>
-                    <strong>29.703 Users (40%)</strong>
-                    <Progress
-                      className="progress-xs mt-2"
-                      color="success"
-                      value="40"
-                    />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Unique</div>
-                    <strong>24.093 Users (20%)</strong>
-                    <Progress
-                      className="progress-xs mt-2"
-                      color="info"
-                      value="20"
-                    />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Pageviews</div>
-                    <strong>78.706 Views (60%)</strong>
-                    <Progress
-                      className="progress-xs mt-2"
-                      color="warning"
-                      value="60"
-                    />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">New Users</div>
-                    <strong>22.123 Users (80%)</strong>
-                    <Progress
-                      className="progress-xs mt-2"
-                      color="danger"
-                      value="80"
-                    />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Bounce Rate</div>
-                    <strong>Average Rate (40.15%)</strong>
-                    <Progress
-                      className="progress-xs mt-2"
-                      color="primary"
-                      value="40"
-                    />
-                  </Col>
-                </Row>
-              </CardFooter>
+              </Card.Body>
             </Card>
           </Col>
         </Row>

@@ -80,7 +80,6 @@ class App extends React.Component {
             style={{
               flexGrow: 1,
               // backgroundColor: theme.palette.background.default,
-              paddingRight: '24px',
               paddingBottom: '24px',
               paddingTop: '86px'
             }}

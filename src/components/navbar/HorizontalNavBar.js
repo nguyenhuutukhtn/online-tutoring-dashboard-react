@@ -16,9 +16,8 @@ class HorizontalNavBar extends React.Component {
         collapseOnSelect
         expand="lg"
         variant="dark"
-        // className="fixed-top"
-
-        style={{ background: '#1D4575' }}
+        className="shadow-none "
+        style={{ background: '#197DE8' }}
       >
         <Navbar.Brand href="/" style={{ fontWeight: 'bold' }}>
           Dashboard
