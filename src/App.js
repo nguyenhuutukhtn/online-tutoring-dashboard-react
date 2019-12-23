@@ -28,6 +28,7 @@ import './App.css';
 import './components/navbar/navbar.css';
 import ListUser from './components/users/ListUser';
 import ListSkill from './components/skills/ListSkill';
+import ListContracts from './components/contract/ListContracts';
 
 const drawerWidth = 240;
 
@@ -96,7 +97,7 @@ class App extends React.Component {
                 </ListItemIcon>
                 <ListItemText primary="Hợp đồng" />
               </ListItem>
-              <ListItem button className="mt-2" component="a" href="/report">
+              <ListItem button className="mt-2" component="a" href="/complains">
                 <ListItemIcon>
                   <GroupIcon style={{ color: '#F3A4B5' }} />
                 </ListItemIcon>
@@ -123,6 +124,7 @@ class App extends React.Component {
                   <Route path="/users" component={ListUser} />
 
                   <Route path="/skills" component={ListSkill} />
+                  <Route path="/contracts" component={ListContracts} />
                   <PrivateRoute path="/" component={Dashboard} />
 
                   <Redirect from="*" to="/" />
