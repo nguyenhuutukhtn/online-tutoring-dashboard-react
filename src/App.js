@@ -27,6 +27,7 @@ import history from './helpers/history';
 import './App.css';
 import './components/navbar/navbar.css';
 import ListUser from './components/users/ListUser';
+import ListSkill from './components/skills/ListSkill';
 
 const drawerWidth = 240;
 
@@ -71,31 +72,31 @@ class App extends React.Component {
             />
 
             <List className="mt-5">
-              <ListItem button selected>
+              <ListItem button component="a" href="/">
                 <ListItemIcon>
                   <TvIcon style={{ color: '#1D4575' }} />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
               </ListItem>
-              <ListItem button className="mt-2">
+              <ListItem button className="mt-2" component="a" href="/users">
                 <ListItemIcon>
                   <PersonIcon style={{ color: '#FFD600' }} />
                 </ListItemIcon>
                 <ListItemText primary="Tài khoản" />
               </ListItem>
-              <ListItem button className="mt-2">
+              <ListItem button className="mt-2" component="a" href="/skills">
                 <ListItemIcon>
                   <CardMembershipIcon style={{ color: '#FB6340' }} />
                 </ListItemIcon>
                 <ListItemText primary="Kĩ năng" />
               </ListItem>
-              <ListItem button className="mt-2">
+              <ListItem button className="mt-2" component="a" href="/contracts">
                 <ListItemIcon>
                   <AssignmentTurnedInIcon style={{ color: '#11CDEF' }} />
                 </ListItemIcon>
                 <ListItemText primary="Hợp đồng" />
               </ListItem>
-              <ListItem button className="mt-2">
+              <ListItem button className="mt-2" component="a" href="/report">
                 <ListItemIcon>
                   <GroupIcon style={{ color: '#F3A4B5' }} />
                 </ListItemIcon>
@@ -120,6 +121,8 @@ class App extends React.Component {
               <div className="main-route-place">
                 <Switch>
                   <Route path="/users" component={ListUser} />
+
+                  <Route path="/skills" component={ListSkill} />
                   <PrivateRoute path="/" component={Dashboard} />
 
                   <Redirect from="*" to="/" />
