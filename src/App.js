@@ -29,6 +29,8 @@ import './components/navbar/navbar.css';
 import ListUser from './components/users/ListUser';
 import ListSkill from './components/skills/ListSkill';
 import ListContracts from './components/contract/ListContracts';
+import ListComplain from './components/complain/ListComplain';
+import ComplainDetail from './components/complain/ComplainDetail';
 
 const drawerWidth = 240;
 
@@ -46,6 +48,11 @@ class App extends React.Component {
 
     return (
       <div className="App">
+        {alert.message && (
+          <MDBAlert className={`alert text-center ${alert.type}`}>
+            {alert.message}
+          </MDBAlert>
+        )}
         <div style={{ display: 'flex' }}>
           <CssBaseline />
           <AppBar
@@ -114,17 +121,14 @@ class App extends React.Component {
             }}
           >
             <Router history={history}>
-              {alert.message && (
-                <MDBAlert className={`alert text-center ${alert.type}`}>
-                  {alert.message}
-                </MDBAlert>
-              )}
               <div className="main-route-place">
                 <Switch>
                   <Route path="/users" component={ListUser} />
 
                   <Route path="/skills" component={ListSkill} />
                   <Route path="/contracts" component={ListContracts} />
+                  <Route path="/complains" component={ListComplain} />
+                  <Route path="/complain-detail" component={ComplainDetail} />
                   <PrivateRoute path="/" component={Dashboard} />
 
                   <Redirect from="*" to="/" />
