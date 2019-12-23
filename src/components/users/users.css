@@ -15,3 +15,50 @@
 .no-padding-top {
   padding-top: 0 !important;
 }
+
+.general-user-info {
+  background: #f7fafb;
+}
+
+.user-info-container {
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: 'hidden';
+  height: '100%';
+  width: '100%';
+}
+
+.dialog-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+  overflow: 'hidden';
+  height: '100%';
+  width: '100%';
+}
+
+.close-button {
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+}
+
+.close-icon {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+
+.detail-avatar {
+  align-items: center;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.detail-title {
+  font-size: 14px;
+  color: grey;
+}
+
+.detail-content {
+  font-size: 16px;
+  color: black;
+}
