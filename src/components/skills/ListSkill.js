@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  Row,
-  Table,
-  Container,
-  Col,
-  Badge,
-  Button
-} from 'react-bootstrap';
+import { Card, Row, Table, Container, Col, Button } from 'react-bootstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 import {
   Dialog,
@@ -24,6 +16,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
+import { connect } from 'react-redux';
+import userActions from '../../actions/user.action';
+import history from '../../helpers/history';
 import './skills.css';
 
 class ListSkill extends React.Component {
@@ -31,24 +26,140 @@ class ListSkill extends React.Component {
     super(props);
     this.state = {
       openAddDialog: false,
-      openEditDialog: false
+      openEditDialog: false,
+      skillId: ''
     };
+  }
+
+  componentDidMount() {
+    const { listAllSkill } = this.props;
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    listAllSkill(currentPage);
   }
 
   handleAddClick = () => {
     this.setState({ openAddDialog: true });
   };
 
-  handleEditClick = () => {
-    this.setState({ openAddDialog: true });
+  handleEditClick = skillId => {
+    this.setState({ openEditDialog: true, skillId });
   };
 
   handleCloseDialogClick = () => {
     this.setState({ openAddDialog: false, openEditDialog: false });
   };
 
+  renderListSkill = () => {
+    const { listSkill } = this.props;
+    if (!listSkill) {
+      return '';
+    }
+    return listSkill.data.map(skill => {
+      return (
+        <tr>
+          <td>
+            <strong className="mb-0 text-sm">{skill.name}</strong>
+          </td>
+          <td />
+          <td />
+          <td className="text-left">
+            <IconButton onClick={() => this.handleEditClick(skill.id)}>
+              <EditIcon style={{ color: '#115292' }} />
+            </IconButton>
+            <IconButton>
+              <DeleteIcon style={{ color: '#ed4337' }} />
+            </IconButton>
+          </td>
+        </tr>
+      );
+    });
+  };
+
+  handlePageCLick = (e, page) => {
+    e.preventDefault();
+    history.push(`/skills?page=${page}`);
+  };
+
+  renderPaging = () => {
+    const { listSkill } = this.props;
+    if (!listSkill) {
+      return '';
+    }
+    const { totalPage } = listSkill;
+    const arr = Array(totalPage).fill(1);
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    return arr.map((elem, index) => {
+      return (
+        <PaginationItem className="active">
+          <PaginationLink
+            onClick={e => this.handlePageCLick(e, index + 1)}
+            className="border"
+          >
+            {index + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    });
+  };
+
+  renderEditDialog = () => {
+    const { openEditDialog, skillId } = this.state;
+    const { listSkill } = this.props;
+    if (!listSkill) {
+      return '';
+    }
+    let skillData = '';
+    listSkill.data.forEach(elem => {
+      if (elem.id === skillId) {
+        skillData = elem;
+      }
+    });
+
+    return (
+      <Dialog fullWidth open={openEditDialog}>
+        <DialogTitle id="form-dialog-title">Chỉnh sữa kĩ năng</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Chỉnh sửa nội dung ô dưới.</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Tên kĩ năng"
+            type="text"
+            fullWidth
+            defaultValue={skillData.name}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => this.handleCloseDialogClick()}
+            color="primary"
+          >
+            Bỏ qua
+          </Button>
+          <Button
+            //   variant="contained"
+            onClick={() => this.handleCloseDialogClick()}
+            color="primary"
+          >
+            Thêm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   render() {
-    const { openAddDialog, openEditDialog } = this.state;
+    const { openAddDialog } = this.state;
     return (
       <div>
         <Container>
@@ -82,154 +193,17 @@ class ListSkill extends React.Component {
                       <th scope="col" className="table-title">
                         Tên kĩ năng
                       </th>
-
-                      <th scope="col" className="table-title">
-                        Số người dạy
-                      </th>
-                      <th scope="col" className="table-title">
-                        Số người học
-                      </th>
-
                       <th scope="col"> </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">
-                          Luyện thi khối A
-                        </strong>
-                      </td>
-                      <th scope="row">
-                        <Badge pill variant="info">
-                          160
-                        </Badge>
-                      </th>
-
-                      <td>
-                        <Badge pill variant="success">
-                          160
-                        </Badge>
-                      </td>
-
-                      <td className="text-left">
-                        <IconButton onClick={() => this.handleEditClick()}>
-                          <EditIcon style={{ color: '#115292' }} />
-                        </IconButton>
-                        <IconButton>
-                          <DeleteIcon style={{ color: '#ed4337' }} />
-                        </IconButton>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">
-                          Luyện thi khối A
-                        </strong>
-                      </td>
-                      <th scope="row">
-                        <Badge pill variant="info">
-                          160
-                        </Badge>
-                      </th>
-
-                      <td>
-                        <Badge pill variant="success">
-                          160
-                        </Badge>
-                      </td>
-
-                      <td className="text-left">
-                        <IconButton>
-                          <EditIcon style={{ color: '#115292' }} />
-                        </IconButton>
-                        <IconButton>
-                          <DeleteIcon style={{ color: '#ed4337' }} />
-                        </IconButton>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">
-                          Luyện thi khối A
-                        </strong>
-                      </td>
-                      <th scope="row">
-                        <Badge pill variant="info">
-                          160
-                        </Badge>
-                      </th>
-
-                      <td>
-                        <Badge pill variant="success">
-                          160
-                        </Badge>
-                      </td>
-
-                      <td className="text-left">
-                        <IconButton>
-                          <EditIcon style={{ color: '#115292' }} />
-                        </IconButton>
-                        <IconButton>
-                          <DeleteIcon style={{ color: '#ed4337' }} />
-                        </IconButton>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody>{this.renderListSkill()}</tbody>
                 </Table>
                 <nav aria-label="...">
                   <Pagination
                     className="pagination justify-content-start ml-4"
                     listClassName="justify-content-start ml-4"
                   >
-                    <PaginationItem className="disabled">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                        tabIndex="-1"
-                        className="border"
-                      >
-                        <i className="fas fa-angle-left" />
-                        <span className="sr-only">Previous</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                        className="border"
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        className="border"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        2 <span className="sr-only">(current)</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        className="border"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        className="border"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className="fas fa-angle-right" />
-                        <span className="sr-only">Next</span>
-                      </PaginationLink>
-                    </PaginationItem>
+                    {this.renderPaging()}
                   </Pagination>
                 </nav>
               </Card>
@@ -266,39 +240,25 @@ class ListSkill extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <Dialog fullWidth open={openEditDialog}>
-          <DialogTitle id="form-dialog-title">Chỉnh sữa kĩ năng</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Chỉnh sửa nội dung ô dưới.</DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Tên kĩ năng"
-              type="text"
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              onClick={() => this.handleCloseDialogClick()}
-              color="primary"
-            >
-              Bỏ qua
-            </Button>
-            <Button
-              //   variant="contained"
-              onClick={() => this.handleCloseDialogClick()}
-              color="primary"
-            >
-              Thêm
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {this.renderEditDialog()}
       </div>
     );
   }
 }
 
-export default ListSkill;
+function mapState(state) {
+  const { loggingIn } = state.login;
+  const { listUser, listSkill } = state.users;
+  return { loggingIn, listUser, listSkill };
+}
+
+const actionCreators = {
+  login: userActions.login,
+  // logout: userActions.logout
+  listAllUser: userActions.listAllUser,
+  listAllSkill: userActions.listAllSkill
+};
+
+const connectedListSkillPage = connect(mapState, actionCreators)(ListSkill);
+
+export default connectedListSkillPage;

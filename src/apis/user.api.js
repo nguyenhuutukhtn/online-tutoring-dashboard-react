@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 // import authHeader from '../helpers/auth-header';
-import constantApi from "./constants.api";
+import constantApi from './constants.api';
 
 function handleResponse(response) {
   return response.text().then(text => {
@@ -22,18 +23,18 @@ function handleResponse(response) {
 
 function login(username, password) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   };
-  console.log("request", requestOptions);
+  console.log('request', requestOptions);
 
   // eslint-disable-next-line no-undef
   return fetch(`${constantApi.url}/admin/login`, requestOptions)
     .then(handleResponse)
     .then(userInfo => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       return userInfo;
     });
@@ -41,8 +42,8 @@ function login(username, password) {
 
 function loginFB(name, fbId) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, fbId })
   };
   console.log(`request: ${requestOptions}`);
@@ -52,7 +53,7 @@ function loginFB(name, fbId) {
     .then(handleResponse)
     .then(userInfo => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       return userInfo;
     });
@@ -60,8 +61,8 @@ function loginFB(name, fbId) {
 
 function loginGG(name, googleId) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, googleId })
   };
   console.log(`request: ${requestOptions}`);
@@ -71,15 +72,15 @@ function loginGG(name, googleId) {
     .then(handleResponse)
     .then(userInfo => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       return userInfo;
     });
 }
 function updateAvatar(id, avatarUrl) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ id, avatarUrl })
   };
   // eslint-disable-next-line no-undef
@@ -89,12 +90,39 @@ function updateAvatar(id, avatarUrl) {
       return data;
     });
 }
+function listAllUser(page) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/listallUser?page=${page}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
+
+function listAllSkill(page) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/listAllTag?page=${page}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
 
 const userApis = {
   login,
   loginFB,
   loginGG,
-  updateAvatar
+  updateAvatar,
+  listAllUser,
+  listAllSkill
 };
 
 export default userApis;
