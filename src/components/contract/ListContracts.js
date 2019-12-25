@@ -1,191 +1,236 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import moment from 'moment';
 
-import {
-  Badge,
-  Card,
-  Media,
-  Table,
-  Button,
-  Container,
-  Row,
-  Col
-} from 'react-bootstrap';
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+import { Badge, Card, Media, Table, Button, Pagination } from 'react-bootstrap';
 
 import './contracts.css';
+import history from '../../helpers/history';
+import { requestPolicyOfStudent } from '../../actions/user.action';
 
 class ListContracts extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      currentPage: 1,
+      data: [],
+      count: 0
+    };
   }
 
-  componentDidMount() {}
+  componentDidMount = () => {
+    const { getListPolicy } = this.props;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
+    console.log('--------tokene', token);
+    getListPolicy(1, token, res => {
+      console.log('----rés', res);
+      this.setState({
+        count: res.count,
+        data: res.data
+      });
+    });
+  };
+
+  onListContractPageChange = page => {
+    const { getListPolicy } = this.props;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
+    getListPolicy(page, token, res => {
+      this.setState({
+        count: res.count,
+        data: res.data,
+        currentPage: page
+      });
+    });
+  };
+
+  handleDetailClick = id => {
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (userInfo.role === 'tutor') {
+      return history.push({
+        pathname: '/tutor-contract-detail',
+        search: `?id=${id}`
+      });
+    }
+    return history.push({
+      pathname: '/contract-detail',
+      search: `?id=${id}`
+    });
+  };
+
+  renderStatus = status => {
+    let result;
+    switch (status) {
+      case 'new':
+        result = (
+          <Badge pill variant="primary">
+            Mới
+          </Badge>
+        );
+        break;
+      case 'approve':
+        result = (
+          <Badge pill variant="info ">
+            Đã chấp nhận
+          </Badge>
+        );
+        break;
+      case 'complete':
+        result = (
+          <Badge pill variant="success  ">
+            Đã hoàn thành
+          </Badge>
+        );
+        break;
+      case 'cancel':
+        result = (
+          <Badge pill variant="danger  ">
+            Đã huỷ
+          </Badge>
+        );
+        break;
+      default:
+        break;
+    }
+    return result;
+  };
+
+  renderPaymentStatus = status => {
+    let result;
+    switch (status) {
+      case 'yes':
+        result = (
+          <Badge pill variant="success">
+            Đã thanh toán
+          </Badge>
+        );
+        break;
+      case 'no':
+        result = (
+          <Badge pill variant="danger ">
+            Chưa thanh toán
+          </Badge>
+        );
+        break;
+      default:
+        break;
+    }
+    return result;
+  };
+
+  renderPage = () => {
+    const { currentPage } = this.state;
+    const { count } = this.state;
+    const totalPage = Math.ceil(count / 9);
+    const listPage = [];
+    for (let i = 0; i < totalPage; i += 1) {
+      listPage.push(
+        <Pagination.Item
+          active={currentPage === i + 1}
+          onClick={() => this.onListContractPageChange(i + 1)}
+        >
+          {i + 1}
+        </Pagination.Item>
+      );
+    }
+    return listPage;
+  };
+
+  renderRow = () => {
+    const { data } = this.state;
+    let listRow = null;
+    if (data) {
+      listRow = data.map(policy => {
+        return (
+          <tr>
+            <th scope="row">
+              <Media className="align-items-center">
+                <a
+                  className="rounded-circle mr-3"
+                  href="#pablo"
+                  onClick={e => e.preventDefault()}
+                >
+                  <img
+                    alt="avatar"
+                    src={
+                      policy.student_avatar
+                        ? policy.student_avatar
+                        : 'https://res.cloudinary.com/dsqfchskj/image/upload/v1576583327/Tutor/default-avatar_iyzn7y.png'
+                    }
+                    className="rounded-circle"
+                    style={{
+                      height: '48px',
+                      width: '48px'
+                    }}
+                  />
+                </a>
+                <Media>
+                  <span className="mb-0 text-sm">{policy.name}</span>
+                </Media>
+              </Media>
+            </th>
+            <td>{policy.price}K VNĐ</td>
+            <td>
+              <Badge pill variant="success">
+                {policy.hours_hire}
+              </Badge>
+            </td>
+            <td>
+              <Badge pill variant="primary">
+                {moment(policy.register_date).format('DD-MM-YYYY HH:mm:ss')}
+              </Badge>
+            </td>
+            <td>{this.renderStatus(policy.status)}</td>
+            <td>{this.renderPaymentStatus(policy.payment_status)}</td>
+            <td className="text-right">
+              <Button
+                variant="info"
+                className="detail-button"
+                onClick={() => this.handleDetailClick(policy.id)}
+              >
+                Chi tiết
+              </Button>
+            </td>
+          </tr>
+        );
+      });
+    }
+    return listRow;
+  };
 
   render() {
     return (
-      <Container>
-        <Row>
-          <Col>
-            <Card className="mt-4">
-              <Card.Header className="border-0">
-                <h4 className="mb-0">Danh sách hợp đồng</h4>
-              </Card.Header>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th scope="col">Gia sư</th>
-                    <th scope="col">Phí</th>
-                    <th scope="col">Xác nhận</th>
-                    <th scope="col">Trạng thái</th>
-                    <th scope="col">Thanh toán</th>
-                    <th scope="col"> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          <img
-                            alt="avatar"
-                            src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">Nguyễn Hữu Tú</span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>160000d</td>
-                    <td>
-                      <Badge pill variant="success">
-                        Đã xác nhận
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge pill variant="primary">
-                        Đang học
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge pill variant="danger">
-                        Chưa thanh toán
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <Button variant="info" className="detail-button">
-                        Chi tiết
-                      </Button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">
-                      <Media className="align-items-center">
-                        <a
-                          className="avatar rounded-circle mr-3"
-                          href="#pablo"
-                          onClick={e => e.preventDefault()}
-                        >
-                          <img
-                            alt="avatar"
-                            src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                          />
-                        </a>
-                        <Media>
-                          <span className="mb-0 text-sm">Nguyễn Hữu Tú</span>
-                        </Media>
-                      </Media>
-                    </th>
-                    <td>120000d</td>
-                    <td>
-                      <Badge pill variant="warning">
-                        Đang chờ
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge pill variant="danger">
-                        Đang khiếu nại
-                      </Badge>
-                    </td>
-                    <td>
-                      <Badge pill variant="danger">
-                        Chưa thanh toán
-                      </Badge>
-                    </td>
-                    <td className="text-right">
-                      <Button variant="info" className="detail-button">
-                        Chi tiết
-                      </Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </Table>
-              <nav aria-label="...">
-                <Pagination
-                  className="pagination justify-content-start ml-4"
-                  listClassName="justify-content-start ml-4"
-                >
-                  <PaginationItem className="disabled">
-                    <PaginationLink
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      tabIndex="-1"
-                      className="border"
-                    >
-                      <i className="fas fa-angle-left" />
-                      <span className="sr-only">Previous</span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem className="active">
-                    <PaginationLink
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      className="border"
-                    >
-                      1
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      2 <span className="sr-only">(current)</span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      3
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="fas fa-angle-right" />
-                      <span className="sr-only">Next</span>
-                    </PaginationLink>
-                  </PaginationItem>
-                </Pagination>
-              </nav>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+      <Card className="mt-4">
+        <Card.Header className="border-0">
+          <h4 className="mb-0">Danh sách hợp đồng</h4>
+        </Card.Header>
+        <Table className="align-items-center table-flush" responsive>
+          <thead className="thead-light">
+            <tr>
+              <th scope="col">Gia sư</th>
+              <th scope="col">Phí</th>
+              <th scope="col">Số giờ thuê</th>
+              <th scope="col">Ngày đăng kí</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col">Thanh toán</th>
+              <th scope="col"> </th>
+            </tr>
+          </thead>
+          <tbody>{this.renderRow()}</tbody>
+        </Table>
+        <Pagination
+          className="text-center mt-4 mx-auto float-center d-flex justify-content-center"
+          align="center"
+        >
+          {this.renderPage()}
+        </Pagination>
+      </Card>
     );
   }
 }
 
-export default ListContracts;
+const mapDispatchToProps = dispatch => ({
+  getListPolicy: (page, token, cb) =>
+    dispatch(requestPolicyOfStudent(page, token, cb))
+});
+
+export default connect(null, mapDispatchToProps)(ListContracts);
