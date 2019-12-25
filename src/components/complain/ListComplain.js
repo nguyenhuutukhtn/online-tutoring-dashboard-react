@@ -22,12 +22,13 @@ class ListComplain extends Component {
 
   componentDidMount() {
     const { listAllComplaint } = this.props;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const searchParams = new URLSearchParams(window.location.search);
     let currentPage = parseInt(searchParams.get('page'), 10);
     if (!currentPage) {
       currentPage = 1;
     }
-    listAllComplaint(currentPage);
+    listAllComplaint(currentPage, token);
   }
 
   handleDetailCLick = complainId => {
@@ -144,8 +145,6 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  login: userActions.login,
-  // logout: userActions.logout
   listAllComplaint: userActions.listAllComplaint
 };
 

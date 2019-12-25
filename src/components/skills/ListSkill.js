@@ -41,11 +41,12 @@ class ListSkill extends React.Component {
   componentDidMount() {
     const { listAllSkill } = this.props;
     const searchParams = new URLSearchParams(window.location.search);
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     let currentPage = parseInt(searchParams.get('page'), 10);
     if (!currentPage) {
       currentPage = 1;
     }
-    listAllSkill(currentPage);
+    listAllSkill(currentPage, token);
   }
 
   handleAddClick = () => {
@@ -126,10 +127,12 @@ class ListSkill extends React.Component {
   };
 
   handleUpdateSkill = idSkill => {
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ id: idSkill, name: valueSkill })
     };
@@ -199,10 +202,12 @@ class ListSkill extends React.Component {
 
   handleDeleteSkill = () => {
     const { skillId } = this.state;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ id: skillId })
     };
@@ -252,10 +257,12 @@ class ListSkill extends React.Component {
   };
 
   handleAddSkill = () => {
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ name: valueAddSKill })
     };
@@ -373,9 +380,6 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  login: userActions.login,
-  // logout: userActions.logout
-  listAllUser: userActions.listAllUser,
   listAllSkill: userActions.listAllSkill
 };
 

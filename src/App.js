@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Route,
-  BrowserRouter as Router,
-  Redirect,
-  Switch
-} from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -133,13 +128,19 @@ class App extends React.Component {
             <Router history={history}>
               <div className="main-route-place">
                 <Switch>
-                  <Route path="/users" component={ListUser} />
+                  <PrivateRoute path="/users" component={ListUser} />
 
-                  <Route path="/skills" component={ListSkill} />
-                  <Route path="/contracts" component={ListContracts} />
-                  <Route path="/contract-detail" component={ContractDetail} />
-                  <Route path="/complains" component={ListComplain} />
-                  <Route path="/complain-detail" component={ComplainDetail} />
+                  <PrivateRoute path="/skills" component={ListSkill} />
+                  <PrivateRoute path="/contracts" component={ListContracts} />
+                  <PrivateRoute
+                    path="/contract-detail"
+                    component={ContractDetail}
+                  />
+                  <PrivateRoute path="/complains" component={ListComplain} />
+                  <PrivateRoute
+                    path="/complain-detail"
+                    component={ComplainDetail}
+                  />
                   <PrivateRoute path="/" component={Dashboard} />
 
                   <Redirect from="*" to="/" />

@@ -1,18 +1,23 @@
 /* eslint-disable no-undef */
 // import authHeader from '../helpers/auth-header';
 import constantApi from './constants.api';
+import history from '../helpers/history';
 
 function handleResponse(response) {
+  if (!response.ok) {
+    if (response.status === 401) {
+      // auto logout if 401 response returned from api
+      // logout();
+      localStorage.clear();
+      history.push('/login');
+      window.location.reload(true);
+      return Promise.reject(response.statusText);
+    }
+  }
+
   return response.text().then(text => {
     const data = text && JSON.parse(text);
-    console.log(`aaaaaaaaaaaaaaaaaaa${data}`);
     if (!response.ok) {
-      if (response.status === 401) {
-        // auto logout if 401 response returned from api
-        // logout();
-        window.location.reload(true);
-      }
-
       const error = (data && data.message) || response.statusText;
       return Promise.reject(error);
     }
@@ -40,10 +45,13 @@ function login(username, password) {
     });
 }
 
-function listAllUser(page) {
+function listAllUser(page, token) {
   const requestOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   };
   return fetch(
     `${constantApi.url}/admin/listallUser?page=${page}`,
@@ -53,10 +61,13 @@ function listAllUser(page) {
     .then(data => data);
 }
 
-function listAllSkill(page) {
+function listAllSkill(page, token) {
   const requestOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   };
   return fetch(
     `${constantApi.url}/admin/listAllTag?page=${page}`,
@@ -66,10 +77,13 @@ function listAllSkill(page) {
     .then(data => data);
 }
 
-function listAllComplain(page) {
+function listAllComplain(page, token) {
   const requestOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   };
   return fetch(
     `${constantApi.url}/admin/listAllComplain?page=${page}`,
@@ -79,10 +93,13 @@ function listAllComplain(page) {
     .then(data => data);
 }
 
-function getDetailComplain(id) {
+function getDetailComplain(id, token) {
   const requestOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   };
   return fetch(
     `${constantApi.url}/admin/getDetailComplain?id=${id}`,

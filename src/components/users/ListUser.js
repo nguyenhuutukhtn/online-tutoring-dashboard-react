@@ -43,12 +43,13 @@ class ListUser extends React.Component {
 
   componentDidMount() {
     const { listAllUser } = this.props;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const searchParams = new URLSearchParams(window.location.search);
     let currentPage = parseInt(searchParams.get('page'), 10);
     if (!currentPage) {
       currentPage = 1;
     }
-    listAllUser(currentPage);
+    listAllUser(currentPage, token);
   }
 
   handleDetailClick = userId => {
@@ -60,9 +61,13 @@ class ListUser extends React.Component {
   };
 
   handleClickBlock = (userId, action) => {
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const requestOptions = {
       method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
     };
     const actionApi = action === 'block' ? 'lockUser' : 'unlockUser';
     return fetch(

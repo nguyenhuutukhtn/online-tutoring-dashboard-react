@@ -28,9 +28,9 @@ function login(username, password) {
 const listAllUserAction = data => {
   return { type: userConstants.LIST_USER_SUCCESS, data };
 };
-function listAllUser(page) {
+function listAllUser(page, token) {
   return dispatch => {
-    userApis.listAllUser(page).then(data => {
+    userApis.listAllUser(page, token).then(data => {
       dispatch(listAllUserAction(data));
     });
   };
@@ -39,9 +39,9 @@ function listAllUser(page) {
 const listAllSkillAction = data => {
   return { type: userConstants.LIST_SKILL_SUCCESS, data };
 };
-function listAllSkill(page) {
+function listAllSkill(page, token) {
   return dispatch => {
-    userApis.listAllSkill(page).then(data => {
+    userApis.listAllSkill(page, token).then(data => {
       dispatch(listAllSkillAction(data));
     });
   };
@@ -51,9 +51,9 @@ const listAllComplainAction = data => {
   return { type: userConstants.LIST_ALL_COMPLAIN, data };
 };
 
-function listAllComplaint(page) {
+function listAllComplaint(page, token) {
   return dispatch => {
-    userApis.listAllComplain(page).then(data => {
+    userApis.listAllComplain(page, token).then(data => {
       dispatch(listAllComplainAction(data));
     });
   };
@@ -62,16 +62,16 @@ function listAllComplaint(page) {
 const getDetailComplainAction = data => {
   return { type: userConstants.GET_DETAIL_COMPLAIN, data };
 };
-function getDetailComplain(id) {
+function getDetailComplain(id, token) {
   return dispatch => {
-    userApis.getDetailComplain(id).then(data => {
+    userApis.getDetailComplain(id, token).then(data => {
       dispatch(getDetailComplainAction(data));
     });
   };
 }
 export const requestPolicyOfStudent = (page, token, cb) => {
   let check = true;
-  let url = 'https://smart-tutor-dashboard-server.herokuapp.com/admin/policy';
+  let url = 'http://localhost:3200/admin/policy';
   const params = {
     p: page
   };

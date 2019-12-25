@@ -29,9 +29,10 @@ class ComplainDetail extends Component {
 
   componentDidMount() {
     const searchParams = new URLSearchParams(window.location.search);
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const currentComplain = parseInt(searchParams.get('id'), 10);
     const { getDetailComplain } = this.props;
-    getDetailComplain(currentComplain);
+    getDetailComplain(currentComplain, token);
     this.setState({
       id: currentComplain
     });
@@ -45,7 +46,10 @@ class ComplainDetail extends Component {
     const idTutor = complainDetail.data[0].policyData[0].id_teacher;
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify({
         id,
         newStatus: 'solved',
@@ -293,9 +297,6 @@ function mapState(state) {
 }
 
 const actionCreators = {
-  login: userActions.login,
-  // logout: userActions.logout
-  listAllComplaint: userActions.listAllComplaint,
   getDetailComplain: userActions.getDetailComplain
 };
 
