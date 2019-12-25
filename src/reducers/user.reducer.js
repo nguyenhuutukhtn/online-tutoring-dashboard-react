@@ -52,6 +52,16 @@ const users = (state = {}, action) => {
         ...state,
         listSkill: action.data
       };
+    case userConstants.LIST_ALL_COMPLAIN:
+      return {
+        ...state,
+        listComplain: action.data
+      };
+    case userConstants.GET_DETAIL_COMPLAIN:
+      return {
+        ...state,
+        complainDetail: action.data
+      };
     default:
       return state;
   }

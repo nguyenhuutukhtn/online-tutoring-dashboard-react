@@ -116,13 +116,40 @@ function listAllSkill(page) {
     .then(data => data);
 }
 
+function listAllComplain(page) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/listAllComplain?page=${page}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
+
+function getDetailComplain(id) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/getDetailComplain?id=${id}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
 const userApis = {
   login,
   loginFB,
   loginGG,
   updateAvatar,
   listAllUser,
-  listAllSkill
+  listAllSkill,
+  listAllComplain,
+  getDetailComplain
 };
 
 export default userApis;

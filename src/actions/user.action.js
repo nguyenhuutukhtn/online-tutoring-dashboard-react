@@ -44,10 +44,34 @@ function listAllSkill(page) {
   };
 }
 
+const listAllComplainAction = data => {
+  return { type: userConstants.LIST_ALL_COMPLAIN, data };
+};
+
+function listAllComplaint(page) {
+  return dispatch => {
+    userApis.listAllComplain(page).then(data => {
+      dispatch(listAllComplainAction(data));
+    });
+  };
+}
+
+const getDetailComplainAction = data => {
+  return { type: userConstants.GET_DETAIL_COMPLAIN, data };
+};
+function getDetailComplain(id) {
+  return dispatch => {
+    userApis.getDetailComplain(id).then(data => {
+      dispatch(getDetailComplainAction(data));
+    });
+  };
+}
 const userActions = {
   login,
   listAllUser,
-  listAllSkill
+  listAllSkill,
+  listAllComplaint,
+  getDetailComplain
 };
 
 export default userActions;

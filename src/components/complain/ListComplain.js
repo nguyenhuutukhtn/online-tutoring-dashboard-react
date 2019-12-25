@@ -10,14 +10,95 @@ import {
   Col
 } from 'react-bootstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-
+import { connect } from 'react-redux';
+import userActions from '../../actions/user.action';
+import history from '../../helpers/history';
+// import constantApi from '../../apis/constants.api';
 class ListComplain extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { listAllComplaint } = this.props;
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    listAllComplaint(currentPage);
+  }
+
+  handleDetailCLick = complainId => {
+    history.push(`/complain-detail?id=${complainId}`);
+  };
+
+  renderComplain = () => {
+    const { listComplain } = this.props;
+    if (!listComplain) {
+      return '';
+    }
+    return listComplain.data.map(complain => {
+      return (
+        <tr>
+          <th scope="row">{complain.name}</th>
+          <td>
+            <Badge
+              pill
+              variant={
+                complain.complain_status === 'solved' ? 'success' : 'danger'
+              }
+            >
+              {complain.complain_status}
+            </Badge>
+          </td>
+          <td>{complain.content}</td>
+
+          <td className="text-right">
+            <Button
+              variant="info"
+              className="detail-button"
+              onClick={() => this.handleDetailCLick(complain.complain_id)}
+            >
+              Chi tiết
+            </Button>
+          </td>
+        </tr>
+      );
+    });
+  };
+
+  handlePageCLick = (e, page) => {
+    e.preventDefault();
+    history.push(`/complains?page=${page}`);
+  };
+
+  renderPaging = () => {
+    const { listComplain } = this.props;
+    if (!listComplain) {
+      return '';
+    }
+    const { totalPage } = listComplain;
+    const arr = Array(totalPage).fill(1);
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    return arr.map((elem, index) => {
+      return (
+        <PaginationItem className={currentPage === index + 1 ? 'active' : ''}>
+          <PaginationLink
+            onClick={e => this.handlePageCLick(e, index + 1)}
+            className="border"
+          >
+            {index + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    });
+  };
 
   render() {
     return (
@@ -38,98 +119,14 @@ class ListComplain extends Component {
                     <th scope="col"> </th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">Nguyễn Hữu Tú</th>
-                    <td>
-                      <Badge pill variant="danger">
-                        not solve
-                      </Badge>
-                    </td>
-                    <td>
-                      Gia sư này chưa dạy đủ số tiếng mà tôi đã đăng ký trước
-                      đó, mong admin xử lý giúp
-                    </td>
-
-                    <td className="text-right">
-                      <Button variant="info" className="detail-button">
-                        Chi tiết
-                      </Button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Nguyễn Hữu Tú</th>
-                    <td>
-                      <Badge pill variant="success">
-                        solved
-                      </Badge>
-                    </td>
-                    <td>
-                      Gia sư này chưa dạy đủ số tiếng mà tôi đã đăng ký trước
-                      đó, mong admin xử lý giúp
-                    </td>
-
-                    <td className="text-right">
-                      <Button variant="info" className="detail-button">
-                        Chi tiết
-                      </Button>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody>{this.renderComplain()}</tbody>
               </Table>
               <nav aria-label="...">
                 <Pagination
                   className="pagination justify-content-start ml-4"
                   listClassName="justify-content-start ml-4"
                 >
-                  <PaginationItem className="disabled">
-                    <PaginationLink
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      tabIndex="-1"
-                      className="border"
-                    >
-                      <i className="fas fa-angle-left" />
-                      <span className="sr-only">Previous</span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem className="active">
-                    <PaginationLink
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      className="border"
-                    >
-                      1
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      2 <span className="sr-only">(current)</span>
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      3
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink
-                      className="border"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                    >
-                      <i className="fas fa-angle-right" />
-                      <span className="sr-only">Next</span>
-                    </PaginationLink>
-                  </PaginationItem>
+                  {this.renderPaging()}
                 </Pagination>
               </nav>
             </Card>
@@ -140,4 +137,21 @@ class ListComplain extends Component {
   }
 }
 
-export default ListComplain;
+function mapState(state) {
+  const { loggingIn } = state.login;
+  const { listUser, listComplain } = state.users;
+  return { loggingIn, listUser, listComplain };
+}
+
+const actionCreators = {
+  login: userActions.login,
+  // logout: userActions.logout
+  listAllComplaint: userActions.listAllComplaint
+};
+
+const connectedListComplainPage = connect(
+  mapState,
+  actionCreators
+)(ListComplain);
+
+export default connectedListComplainPage;
