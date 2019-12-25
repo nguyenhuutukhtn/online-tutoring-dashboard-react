@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   MDBContainer,
   MDBRow,
@@ -8,28 +8,29 @@ import {
   MDBInput,
   MDBBtn,
   MDBModalFooter
-} from "mdbreact";
-import { connect } from "react-redux";
-import "./login.css";
-import userActions from "../../actions/user.action";
-import history from "../../helpers/history";
+} from 'mdbreact';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import userActions from '../../actions/user.action';
+import history from '../../helpers/history';
+import alertActions from '../../actions/alert.action';
+import CustomAlert from '../../customs/CustomAlert';
+import './login.css';
 
 class Login extends React.Component {
   constructor(props) {
     super(props);
 
-    // reset login status
-    // this.props.logout();
-
     this.state = {
-      username: "",
-      password: "",
+      username: '',
+      password: '',
       submitted: false,
       loading: true
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.clearAlert = this.clearAlert.bind(this);
   }
 
   componentDidMount() {
@@ -38,12 +39,17 @@ class Login extends React.Component {
   }
 
   checkLogin = () => {
-    const userInfo = localStorage.getItem("userInfo");
+    const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
-      history.push("/");
+      history.push('/');
       window.location.reload();
     }
   };
+
+  clearAlert() {
+    const { clearAlert } = this.props;
+    clearAlert('clear');
+  }
 
   handleChange(e) {
     const { name, value } = e.target;
@@ -63,14 +69,24 @@ class Login extends React.Component {
 
   render() {
     const { submitted, username, password, loading } = this.state;
-    const { loggingIn } = this.props;
+    const { loggingIn, alert } = this.props;
 
     if (loading) {
       // if your component doesn't have to wait for an async action, remove this block
       return null; // render null when app is not ready
     }
+
     return (
-      <>
+      <div>
+        {alert && (
+          <CustomAlert
+            open={alert.open}
+            variant={alert.type}
+            message={alert.message ? alert.message : ' '}
+            onClose={this.clearAlert}
+          />
+        )}
+
         <div className="page-header">
           <div>
             <div>
@@ -80,7 +96,7 @@ class Login extends React.Component {
                     <MDBCol className="d-flex justify-content-center">
                       <MDBCard>
                         <MDBCardBody className="card-none-shadow mt-0">
-                          {" "}
+                          {' '}
                           <div className="login-con ">
                             <div className="icon-user" />
                             <div className="text-center title">
@@ -160,20 +176,28 @@ class Login extends React.Component {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }
 
 function mapState(state) {
   const { loggingIn } = state.login;
-  return { loggingIn };
+  const { alert } = state;
+  return { loggingIn, alert };
 }
 
-const actionCreators = {
-  login: userActions.login
-  // logout: userActions.logout
-};
+const actionCreators = dispatch => ({
+  ...bindActionCreators(
+    {
+      login: userActions.login
+    },
+    dispatch
+  ),
+  clearAlert: message => {
+    dispatch(alertActions.clear(message));
+  }
+});
 
 const connectedLoginPage = connect(mapState, actionCreators)(Login);
 

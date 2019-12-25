@@ -20,9 +20,7 @@ import '../node_modules/mdbreact/dist/css/mdb.css';
 render(
   <Provider store={store}>
     <BrowserRouter>
-      // eslint-disable-next-line react/jsx-no-comment-textnodes
       <Switch>
-        // eslint-disable-next-line react/jsx-props-no-spreading
         <Route path="/login" render={props => <Login {...props} />} />
         <Route path="/" render={props => <App {...props} />} />
       </Switch>

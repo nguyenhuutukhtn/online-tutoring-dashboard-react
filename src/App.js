@@ -5,7 +5,6 @@ import {
   Redirect,
   Switch
 } from 'react-router-dom';
-import { MDBAlert } from 'mdbreact';
 import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -31,6 +30,7 @@ import ListSkill from './components/skills/ListSkill';
 import ListContracts from './components/contract/ListContracts';
 import ListComplain from './components/complain/ListComplain';
 import ComplainDetail from './components/complain/ComplainDetail';
+import CustomAlert from './customs/CustomAlert';
 
 const drawerWidth = 240;
 
@@ -41,6 +41,12 @@ class App extends React.Component {
     history.listen(() => {
       window.location.reload();
     });
+    this.clearAlert = this.clearAlert.bind(this);
+  }
+
+  clearAlert() {
+    const { clearAlert } = this.props;
+    clearAlert('clear');
   }
 
   render() {
@@ -48,10 +54,13 @@ class App extends React.Component {
 
     return (
       <div className="App">
-        {alert.message && (
-          <MDBAlert className={`alert text-center ${alert.type}`}>
-            {alert.message}
-          </MDBAlert>
+        {alert && (
+          <CustomAlert
+            open={alert.open}
+            variant={alert.type}
+            message={alert.message ? alert.message : ' '}
+            onClose={this.clearAlert}
+          />
         )}
         <div style={{ display: 'flex' }}>
           <CssBaseline />
@@ -147,9 +156,11 @@ function mapState(state) {
   return { alert };
 }
 
-const actionCreators = {
-  clearAlerts: alertActions.clear
-};
+const actionCreators = dispatch => ({
+  clearAlert: message => {
+    dispatch(alertActions.clear(message));
+  }
+});
 
 const connectedApp = connect(mapState, actionCreators)(App);
 

@@ -10,6 +10,11 @@ class HorizontalNavBar extends React.Component {
   }
   // verifies if routeName is the one active (in browser input)
 
+  logout = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
+
   render() {
     return (
       <Navbar
@@ -49,24 +54,18 @@ class HorizontalNavBar extends React.Component {
                 >
                   <img
                     className="thumbnail-image rounded-circle"
-                    src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
+                    src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s40-c-fbw=1/photo.jpg"
                     alt="user pic"
                   />
                   <div style={{ display: 'inline' }} className="ml-3">
-                    Nguyễn Hữu Tú
+                    Admin
                   </div>
                 </div>
               }
               id="basic-nav-dropdown"
             >
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
+              <NavDropdown.Item onClick={() => this.logout()}>
+                Đăng xuất
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
