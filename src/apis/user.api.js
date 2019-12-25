@@ -40,56 +40,6 @@ function login(username, password) {
     });
 }
 
-function loginFB(name, fbId) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, fbId })
-  };
-  console.log(`request: ${requestOptions}`);
-
-  // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/users/loginFB`, requestOptions)
-    .then(handleResponse)
-    .then(userInfo => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
-      return userInfo;
-    });
-}
-
-function loginGG(name, googleId) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, googleId })
-  };
-  console.log(`request: ${requestOptions}`);
-
-  // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/users/loginGG`, requestOptions)
-    .then(handleResponse)
-    .then(userInfo => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
-      return userInfo;
-    });
-}
-function updateAvatar(id, avatarUrl) {
-  const requestOptions = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id, avatarUrl })
-  };
-  // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/tutor/uploadAvatar`, requestOptions)
-    .then(handleResponse)
-    .then(data => {
-      return data;
-    });
-}
 function listAllUser(page) {
   const requestOptions = {
     method: 'GET',
@@ -141,15 +91,40 @@ function getDetailComplain(id) {
     .then(handleResponse)
     .then(data => data);
 }
+const requestPolicyDetail = (id, token, cb) => {
+  let check = true;
+  const requestOptions = {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  // eslint-disable-next-line no-undef
+  return fetch(`${constantApi.url}/admin/policy/${id}`, requestOptions)
+    .then(response => {
+      if (response.status !== 200) {
+        check = false;
+        return false;
+      }
+      return response.json();
+    })
+    .then(response => {
+      if (check) {
+        cb(response);
+      }
+    });
+};
+
 const userApis = {
   login,
-  loginFB,
-  loginGG,
-  updateAvatar,
   listAllUser,
   listAllSkill,
   listAllComplain,
-  getDetailComplain
+  getDetailComplain,
+  requestPolicyDetail
 };
 
 export default userApis;
