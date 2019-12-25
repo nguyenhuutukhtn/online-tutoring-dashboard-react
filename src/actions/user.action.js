@@ -118,13 +118,25 @@ const requestPolicyDetail = (id, token, cb) => {
   };
 };
 
+const getProfitAction = data => {
+  return { type: userConstants.GET_PROFIT, data };
+};
+function getProfit() {
+  return dispatch => {
+    userApis.getProfit().then(data => {
+      dispatch(getProfitAction(data));
+    });
+  };
+}
+
 const userActions = {
   login,
   listAllUser,
   listAllSkill,
   listAllComplaint,
   getDetailComplain,
-  requestPolicyDetail
+  requestPolicyDetail,
+  getProfit
 };
 
 export default userActions;
