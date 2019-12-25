@@ -2,6 +2,7 @@ import React from 'react';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import { Navbar, NavDropdown, Nav } from 'react-bootstrap';
 import './navbar.css';
+import history from '../../helpers/history';
 
 class HorizontalNavBar extends React.Component {
   constructor(props) {
@@ -10,9 +11,14 @@ class HorizontalNavBar extends React.Component {
   }
   // verifies if routeName is the one active (in browser input)
 
+  logout = () => {
+    localStorage.clear();
+    history.push('/login');
+    window.location.reload();
+  };
+
   render() {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    console.log('userInfo-', userInfo);
     return (
       <Navbar
         collapseOnSelect
@@ -36,13 +42,15 @@ class HorizontalNavBar extends React.Component {
                   style={{ display: 'inline' }}
                 >
                   <div style={{ display: 'inline' }} className="ml-3">
-                    {userInfo.name}
+                    {userInfo ? userInfo.name : null}
                   </div>
                 </div>
               }
               id="basic-nav-dropdown"
             >
-              <NavDropdown.Item href="#action/3.1">Đăng Xuất</NavDropdown.Item>
+              <NavDropdown.Item onClick={() => this.logout()}>
+                Đăng xuất
+              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

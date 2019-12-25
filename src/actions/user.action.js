@@ -10,9 +10,12 @@ function login(username, password) {
     userApis.login(username, password).then(
       () => {
         dispatch(success());
-        history.push('/');
+
         dispatch(alertActions.success('Đăng nhập thành công'));
-        window.location.reload();
+        setInterval(() => {
+          history.push('/');
+          window.location.reload();
+        }, 4000);
       },
       error => {
         dispatch(failure(error));
@@ -68,7 +71,7 @@ function getDetailComplain(id) {
 }
 export const requestPolicyOfStudent = (page, token, cb) => {
   let check = true;
-  let url = 'http://localhost:3200/admin/policy';
+  let url = 'https://smart-tutor-dashboard-server.herokuapp.com/admin/policy';
   const params = {
     p: page
   };

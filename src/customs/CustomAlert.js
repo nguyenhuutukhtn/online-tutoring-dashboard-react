@@ -1,6 +1,6 @@
-import React from "react";
-import Snackbar from "@material-ui/core/Snackbar";
-import CustomSnackbarContentWrapper from "./CustomSnackbarContentWrapper";
+import React from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
+import CustomSnackbarContentWrapper from './CustomSnackbarContentWrapper';
 
 class CustomAlert extends React.Component {
   constructor(props) {
@@ -14,11 +14,11 @@ class CustomAlert extends React.Component {
     return (
       <Snackbar
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "center"
+          vertical: 'top',
+          horizontal: 'center'
         }}
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={onClose}
       >
         {!open ? null : (
