@@ -1,5 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Switch,
+  Route
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -27,6 +32,7 @@ import ContractDetail from './components/contract/ContractDetail';
 import ListComplain from './components/complain/ListComplain';
 import ComplainDetail from './components/complain/ComplainDetail';
 import CustomAlert from './customs/CustomAlert';
+import Login from './components/login/Login';
 
 const drawerWidth = 240;
 
@@ -129,7 +135,7 @@ class App extends React.Component {
               <div className="main-route-place">
                 <Switch>
                   <PrivateRoute path="/users" component={ListUser} />
-
+                  <Route path="/login" component={Login} />
                   <PrivateRoute path="/skills" component={ListSkill} />
                   <PrivateRoute path="/contracts" component={ListContracts} />
                   <PrivateRoute

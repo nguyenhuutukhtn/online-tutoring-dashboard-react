@@ -3,11 +3,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import Login from './components/login/Login';
+
 import store from './helpers/store';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,10 +20,11 @@ import '../node_modules/mdbreact/dist/css/mdb.css';
 render(
   <Provider store={store}>
     <BrowserRouter>
-      <Switch>
+      {/* <Switch>
         <Route path="/login" render={props => <Login {...props} />} />
         <Route path="/" render={props => <App {...props} />} />
-      </Switch>
+      </Switch> */}
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')
