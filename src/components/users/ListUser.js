@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import {
   Card,
@@ -25,26 +26,255 @@ import DoneIcon from '@material-ui/icons/Done';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import CancelIcon from '@material-ui/icons/Cancel';
 
+import { connect } from 'react-redux';
+import userActions from '../../actions/user.action';
+import history from '../../helpers/history';
 import './users.css';
+import constantApi from '../../apis/constants.api';
 
 class ListUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openDetailDialog: false
+      openDetailDialog: false,
+      userIdDetail: ''
     };
   }
 
-  handleDetailClick = () => {
-    this.setState({ openDetailDialog: true });
+  componentDidMount() {
+    const { listAllUser } = this.props;
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    listAllUser(currentPage);
+  }
+
+  handleDetailClick = userId => {
+    this.setState({ openDetailDialog: true, userIdDetail: userId });
   };
 
   handleCloseDialogClick = () => {
     this.setState({ openDetailDialog: false });
   };
 
+  handleClickBlock = (userId, action) => {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    const actionApi = action === 'block' ? 'lockUser' : 'unlockUser';
+    return fetch(
+      `${constantApi.url}/admin/${actionApi}?id=${userId}`,
+      requestOptions
+    ).then(() => {
+      window.location.reload(false);
+    });
+  };
+
+  renderListUser = () => {
+    const { listUser } = this.props;
+    if (!listUser) {
+      return '';
+    }
+    return listUser.data.map(user => {
+      return (
+        <tr key={user.id}>
+          <td>
+            <strong className="mb-0 text-sm">{user.email}</strong>
+          </td>
+          <th scope="row">
+            <Media className="align-items-center">
+              <a
+                className="avatar rounded-circle mr-3"
+                href="#pablo"
+                onClick={e => e.preventDefault()}
+              >
+                <img alt="avatar" src={user.avatar} />
+              </a>
+              <Media>
+                <span className="mb-0 text-sm">{user.name}</span>
+              </Media>
+            </Media>
+          </th>
+
+          <td>{user.role}</td>
+
+          <td>
+            <Badge pill variant={user.active === 'yes' ? 'success' : 'danger'}>
+              {user.active === 'yes' ? 'active' : 'inactive'}
+            </Badge>
+          </td>
+          <td>{user.balance}</td>
+          <td className="text-right">
+            <Button
+              variant="info"
+              className="table-button float-left"
+              onClick={() => this.handleDetailClick(user.id)}
+            >
+              Detail
+            </Button>
+            <Button
+              variant="danger"
+              className="table-button float-left"
+              onClick={
+                user.active === 'yes'
+                  ? () => this.handleClickBlock(user.id, 'block')
+                  : () => this.handleClickBlock(user.id, 'unblock')
+              }
+            >
+              {user.active === 'yes' ? 'Block' : 'UnBlock'}
+            </Button>
+          </td>
+        </tr>
+      );
+    });
+  };
+
+  handlePageCLick = (e, page) => {
+    e.preventDefault();
+    history.push(`/users?page=${page}`);
+  };
+
+  renderPaging = () => {
+    const { listUser } = this.props;
+    if (!listUser) {
+      return '';
+    }
+    const { totalPage } = listUser;
+    const arr = Array(totalPage).fill(1);
+    const searchParams = new URLSearchParams(window.location.search);
+    let currentPage = parseInt(searchParams.get('page'), 10);
+    console.log('currentPage-------', currentPage);
+    if (!currentPage) {
+      currentPage = 1;
+    }
+    return arr.map((element, index) => {
+      return (
+        <PaginationItem className={currentPage === index + 1 ? 'active' : ''}>
+          <PaginationLink
+            onClick={e => this.handlePageCLick(e, index + 1)}
+            className="border"
+          >
+            {index + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    });
+  };
+
+  renderDialog = () => {
+    const { openDetailDialog, userIdDetail } = this.state;
+    const { listUser } = this.props;
+    if (!listUser) {
+      return '';
+    }
+    let userDetail = '';
+    listUser.data.forEach(elem => {
+      if (elem.id === userIdDetail) {
+        userDetail = elem;
+      }
+    });
+    console.log('userDetail----------', userDetail);
+    return (
+      <Dialog open={openDetailDialog}>
+        <DialogContent className="dialog-content">
+          <Container className="user-info-container">
+            <Row>
+              <Col md="5" className="general-user-info ">
+                <img
+                  style={{
+                    height: '110px',
+                    width: '110px',
+                    borderRadius: '20px'
+                  }}
+                  className="mt-4 mx-auto text-center detail-avatarcenter-block d-flex align-items-center justify-content-center"
+                  alt="avatar"
+                  src={`${userDetail.avatar}`}
+                />
+
+                <List>
+                  <ListItem>
+                    <ListItemIcon>
+                      <InfoIcon style={{ color: '#58BAD7' }} />
+                    </ListItemIcon>
+                    <ListItemText primary={`${userDetail.role}`} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <DoneIcon style={{ color: '#5CD4A2' }} />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        userDetail.active === 'yes' ? 'Active' : 'InActive'
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <AccountBalanceWalletIcon style={{ color: '#E9A84C' }} />
+                    </ListItemIcon>
+                    <ListItemText primary={`${userDetail.balance}VND`} />
+                  </ListItem>
+                </List>
+              </Col>
+
+              <Col md="7" className="pb-4">
+                <div>
+                  <IconButton
+                    className="float-right close-button"
+                    style={{
+                      color: '#E8EAED',
+                      background: '#ffffff'
+                    }}
+                    onClick={() => this.handleCloseDialogClick()}
+                  >
+                    <CancelIcon className="close-icon" />
+                  </IconButton>
+                </div>
+
+                <Typography
+                  variant="h5"
+                  className="mt-3 ml-3 mr-3 d-flex align-items-center justify-content-center"
+                >
+                  Account detail
+                </Typography>
+                <div>
+                  <div className="mt-3">
+                    <div className=" detail-title ml-3 text-left">Name: </div>
+                    <div className=" detail-content ml-3 mr-5">
+                      {userDetail.name}
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className=" detail-title ml-3">Email: </div>
+                    <div className=" detail-content ml-3 mr-5">
+                      {userDetail.email}
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className=" detail-title ml-3">Address: </div>
+                    <div className=" detail-content ml-3 mr-5">
+                      {userDetail.address}
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className=" detail-title ml-3">Price: </div>
+                    <div className=" detail-content ml-3 mr-5">
+                      {userDetail.price_per_hour}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
   render() {
-    const { openDetailDialog } = this.state;
     return (
       <div>
         <Container>
@@ -77,146 +307,7 @@ class ListUser extends React.Component {
                       <th scope="col"> </th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">abc@gmail.com</strong>
-                      </td>
-                      <th scope="row">
-                        <Media className="align-items-center">
-                          <a
-                            className="avatar rounded-circle mr-3"
-                            href="#pablo"
-                            onClick={e => e.preventDefault()}
-                          >
-                            <img
-                              alt="avatar"
-                              src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                            />
-                          </a>
-                          <Media>
-                            <span className="mb-0 text-sm">Nguyễn Hữu Tú</span>
-                          </Media>
-                        </Media>
-                      </th>
-
-                      <td>Admin</td>
-
-                      <td>
-                        <Badge pill variant="success">
-                          Active
-                        </Badge>
-                      </td>
-                      <td>100000</td>
-                      <td className="text-right">
-                        <Button
-                          variant="info"
-                          className="table-button float-left"
-                          onClick={() => this.handleDetailClick()}
-                        >
-                          Detail
-                        </Button>
-                        <Button
-                          variant="danger"
-                          className="table-button float-left"
-                        >
-                          Block
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">xyz@gmail.com</strong>
-                      </td>
-                      <th scope="row">
-                        <Media className="align-items-center">
-                          <a
-                            className="avatar rounded-circle mr-3"
-                            href="#pablo"
-                            onClick={e => e.preventDefault()}
-                          >
-                            <img
-                              alt="avatar"
-                              src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                            />
-                          </a>
-                          <Media>
-                            <span className="mb-0 text-sm">Nguyễn Hữu Tú</span>
-                          </Media>
-                        </Media>
-                      </th>
-
-                      <td>tutor</td>
-
-                      <td>
-                        <Badge pill variant="danger">
-                          Banned
-                        </Badge>
-                      </td>
-                      <td>100000</td>
-                      <td className="text-right">
-                        <Button
-                          variant="info"
-                          className="table-button float-left"
-                          onClick={() => this.handleDetailClick()}
-                        >
-                          Detail
-                        </Button>
-                        <Button
-                          variant="warning"
-                          className="table-button float-left"
-                        >
-                          Unblock
-                        </Button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <strong className="mb-0 text-sm">abc@gmail.com</strong>
-                      </td>
-                      <th scope="row">
-                        <Media className="align-items-center">
-                          <a
-                            className="avatar rounded-circle mr-3"
-                            href="#pablo"
-                            onClick={e => e.preventDefault()}
-                          >
-                            <img
-                              alt="avatar"
-                              src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                            />
-                          </a>
-                          <Media>
-                            <span className="mb-0 text-sm">Nguyễn Hữu Tú</span>
-                          </Media>
-                        </Media>
-                      </th>
-
-                      <td>Admin</td>
-
-                      <td>
-                        <Badge pill variant="success">
-                          Active
-                        </Badge>
-                      </td>
-                      <td>100000</td>
-                      <td className="text-right">
-                        <Button
-                          variant="info"
-                          className="table-button float-left"
-                          onClick={() => this.handleDetailClick()}
-                        >
-                          Detail
-                        </Button>
-                        <Button
-                          variant="danger"
-                          className="table-button float-left"
-                        >
-                          Block
-                        </Button>
-                      </td>
-                    </tr>
-                  </tbody>
+                  <tbody>{this.renderListUser()}</tbody>
                 </Table>
                 <nav aria-label="...">
                   <Pagination
@@ -234,33 +325,7 @@ class ListUser extends React.Component {
                         <span className="sr-only">Previous</span>
                       </PaginationLink>
                     </PaginationItem>
-                    <PaginationItem className="active">
-                      <PaginationLink
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                        className="border"
-                      >
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        className="border"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        2 <span className="sr-only">(current)</span>
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink
-                        className="border"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        3
-                      </PaginationLink>
-                    </PaginationItem>
+                    {this.renderPaging()}
                     <PaginationItem>
                       <PaginationLink
                         className="border"
@@ -277,98 +342,24 @@ class ListUser extends React.Component {
             </Col>
           </Row>
         </Container>
-        <Dialog open={openDetailDialog}>
-          <DialogContent className="dialog-content">
-            <Container className="user-info-container">
-              <Row>
-                <Col md="5" className="general-user-info ">
-                  <img
-                    style={{
-                      height: '110px',
-                      width: '110px',
-                      borderRadius: '20px'
-                    }}
-                    className="mt-4 mx-auto text-center detail-avatarcenter-block d-flex align-items-center justify-content-center"
-                    alt="avatar"
-                    src="https://res.cloudinary.com/dsqfchskj/image/upload/v1576326328/Tutor/78905118_2276223572479557_610009197119012864_o_xdb3x8.jpg"
-                  />
-
-                  <List>
-                    <ListItem>
-                      <ListItemIcon>
-                        <InfoIcon style={{ color: '#58BAD7' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Admin" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <DoneIcon style={{ color: '#5CD4A2' }} />
-                      </ListItemIcon>
-                      <ListItemText primary="Active" />
-                    </ListItem>
-                    <ListItem>
-                      <ListItemIcon>
-                        <AccountBalanceWalletIcon
-                          style={{ color: '#E9A84C' }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText primary="10000000VND" />
-                    </ListItem>
-                  </List>
-                </Col>
-
-                <Col md="7" className="pb-4">
-                  <div>
-                    <IconButton
-                      className="float-right close-button"
-                      style={{
-                        color: '#E8EAED',
-                        background: '#ffffff'
-                      }}
-                      onClick={() => this.handleCloseDialogClick()}
-                    >
-                      <CancelIcon className="close-icon" />
-                    </IconButton>
-                  </div>
-
-                  <Typography
-                    variant="h5"
-                    className="mt-3 ml-3 mr-3 d-flex align-items-center justify-content-center"
-                  >
-                    Account detail
-                  </Typography>
-                  <div>
-                    <div className="mt-3">
-                      <div className=" detail-title ml-3 text-left">Name: </div>
-                      <div className=" detail-content ml-3 mr-5">
-                        Nguyễn Hữu Tú
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className=" detail-title ml-3">Email: </div>
-                      <div className=" detail-content ml-3 mr-5">
-                        abcxyz@gmail.com
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className=" detail-title ml-3">Address: </div>
-                      <div className=" detail-content ml-3 mr-5">
-                        Xô Viết Nghệ Tĩnh, quận Bình Thạnh
-                      </div>
-                    </div>
-                    <div className="mt-3">
-                      <div className=" detail-title ml-3">Price: </div>
-                      <div className=" detail-content ml-3 mr-5">500k/hour</div>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
-          </DialogContent>
-        </Dialog>
+        {this.renderDialog()}
       </div>
     );
   }
 }
 
-export default ListUser;
+function mapState(state) {
+  const { loggingIn } = state.login;
+  const { listUser } = state.users;
+  return { loggingIn, listUser };
+}
+
+const actionCreators = {
+  login: userActions.login,
+  // logout: userActions.logout
+  listAllUser: userActions.listAllUser
+};
+
+const connectedListUserPage = connect(mapState, actionCreators)(ListUser);
+
+export default connectedListUserPage;

@@ -1,5 +1,6 @@
+/* eslint-disable no-undef */
 // import authHeader from '../helpers/auth-header';
-import constantApi from "./constants.api";
+import constantApi from './constants.api';
 
 function handleResponse(response) {
   return response.text().then(text => {
@@ -22,79 +23,108 @@ function handleResponse(response) {
 
 function login(username, password) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   };
-  console.log("request", requestOptions);
+  console.log('request', requestOptions);
 
   // eslint-disable-next-line no-undef
   return fetch(`${constantApi.url}/admin/login`, requestOptions)
     .then(handleResponse)
     .then(userInfo => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
       return userInfo;
     });
 }
 
-function loginFB(name, fbId) {
+function listAllUser(page) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, fbId })
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
   };
-  console.log(`request: ${requestOptions}`);
-
-  // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/users/loginFB`, requestOptions)
+  return fetch(
+    `${constantApi.url}/admin/listallUser?page=${page}`,
+    requestOptions
+  )
     .then(handleResponse)
-    .then(userInfo => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-      return userInfo;
-    });
+    .then(data => data);
 }
 
-function loginGG(name, googleId) {
+function listAllSkill(page) {
   const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, googleId })
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
   };
-  console.log(`request: ${requestOptions}`);
+  return fetch(
+    `${constantApi.url}/admin/listAllTag?page=${page}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
+
+function listAllComplain(page) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/listAllComplain?page=${page}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
+
+function getDetailComplain(id) {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(
+    `${constantApi.url}/admin/getDetailComplain?id=${id}`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then(data => data);
+}
+const requestPolicyDetail = (id, token, cb) => {
+  let check = true;
+  const requestOptions = {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
 
   // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/users/loginGG`, requestOptions)
-    .then(handleResponse)
-    .then(userInfo => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-      return userInfo;
+  return fetch(`${constantApi.url}/admin/policy/${id}`, requestOptions)
+    .then(response => {
+      if (response.status !== 200) {
+        check = false;
+        return false;
+      }
+      return response.json();
+    })
+    .then(response => {
+      if (check) {
+        cb(response);
+      }
     });
-}
-function updateAvatar(id, avatarUrl) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, avatarUrl })
-  };
-  // eslint-disable-next-line no-undef
-  return fetch(`${constantApi.url}/tutor/uploadAvatar`, requestOptions)
-    .then(handleResponse)
-    .then(data => {
-      return data;
-    });
-}
+};
 
 const userApis = {
   login,
-  loginFB,
-  loginGG,
-  updateAvatar
+  listAllUser,
+  listAllSkill,
+  listAllComplain,
+  getDetailComplain,
+  requestPolicyDetail
 };
 
 export default userApis;

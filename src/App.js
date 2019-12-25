@@ -28,6 +28,7 @@ import './components/navbar/navbar.css';
 import ListUser from './components/users/ListUser';
 import ListSkill from './components/skills/ListSkill';
 import ListContracts from './components/contract/ListContracts';
+import ContractDetail from './components/contract/ContractDetail';
 import ListComplain from './components/complain/ListComplain';
 import ComplainDetail from './components/complain/ComplainDetail';
 import CustomAlert from './customs/CustomAlert';
@@ -136,6 +137,7 @@ class App extends React.Component {
 
                   <Route path="/skills" component={ListSkill} />
                   <Route path="/contracts" component={ListContracts} />
+                  <Route path="/contract-detail" component={ContractDetail} />
                   <Route path="/complains" component={ListComplain} />
                   <Route path="/complain-detail" component={ComplainDetail} />
                   <PrivateRoute path="/" component={Dashboard} />

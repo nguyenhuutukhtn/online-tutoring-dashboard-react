@@ -1,4 +1,4 @@
-import userConstants from "../constants/user.constants";
+import userConstants from '../constants/user.constants';
 
 const users = (state = {}, action) => {
   switch (action.type) {
@@ -41,6 +41,26 @@ const users = (state = {}, action) => {
 
           return user;
         })
+      };
+    case userConstants.LIST_USER_SUCCESS:
+      return {
+        ...state,
+        listUser: action.data
+      };
+    case userConstants.LIST_SKILL_SUCCESS:
+      return {
+        ...state,
+        listSkill: action.data
+      };
+    case userConstants.LIST_ALL_COMPLAIN:
+      return {
+        ...state,
+        listComplain: action.data
+      };
+    case userConstants.GET_DETAIL_COMPLAIN:
+      return {
+        ...state,
+        complainDetail: action.data
       };
     default:
       return state;
