@@ -140,6 +140,17 @@ function getTopProfitByTutor(token) {
   };
 }
 
+const getAllInfoAction = data => {
+  return { type: userConstants.GET_ALL_INFO, data };
+};
+function getAllInfo() {
+  return dispatch => {
+    userApis.getAllInfo().then(data => {
+      dispatch(getAllInfoAction(data));
+    });
+  };
+}
+
 const userActions = {
   login,
   listAllUser,
@@ -148,7 +159,8 @@ const userActions = {
   getDetailComplain,
   requestPolicyDetail,
   getProfit,
-  getTopProfitByTutor
+  getTopProfitByTutor,
+  getAllInfo
 };
 
 export default userActions;

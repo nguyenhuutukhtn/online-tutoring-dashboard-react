@@ -72,6 +72,11 @@ const users = (state = {}, action) => {
         ...state,
         profitByTutor: action.data
       };
+    case userConstants.GET_ALL_INFO:
+      return {
+        ...state,
+        allInfo: action.data
+      };
     default:
       return state;
   }
