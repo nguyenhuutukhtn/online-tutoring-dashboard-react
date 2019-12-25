@@ -3,6 +3,9 @@ import { Line } from 'react-chartjs-2';
 import { Container, Row, Col, Card, ButtonToolbar } from 'react-bootstrap';
 import { Button, ButtonGroup } from '@material-ui/core';
 
+import { connect } from 'react-redux';
+import userActions from '../../actions/user.action';
+
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -73,8 +76,83 @@ class IncomeStatistic extends React.Component {
             data: data1
           }
         ]
+      },
+      dayChart: {
+        labels: [
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          '10',
+          '11',
+          '12',
+          '13',
+          '14',
+          '15',
+          '16',
+          '17',
+          '18',
+          '19',
+          '20',
+          '21',
+          '22',
+          '23',
+          '24',
+          '25',
+          '26',
+          '27',
+          '28',
+          '29',
+          '30',
+          '31'
+        ],
+        datasets: [
+          {
+            label: 'Doanh thu',
+            backgroundColor: '#EFF9FC',
+            borderColor: 'info',
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: data1
+          }
+        ]
+      },
+      yearChart: {
+        labels: [
+          '2011',
+          '2012',
+          '2013',
+          '2014',
+          '2015',
+          '2016',
+          '2017',
+          '2018',
+          '2019',
+          '2020',
+          '2021'
+        ],
+        datasets: [
+          {
+            label: 'Doanh thu',
+            backgroundColor: '#EFF9FC',
+            borderColor: 'info',
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: data1
+          }
+        ]
       }
     };
+  }
+
+  componentDidMount() {
+    const { getProfit } = this.props;
+    getProfit();
   }
 
   onRadioBtnClick(radioSelected) {
@@ -95,7 +173,25 @@ class IncomeStatistic extends React.Component {
   }
 
   render() {
-    const { monthChart, radioSelected } = this.state;
+    const { monthChart, radioSelected, dayChart, yearChart } = this.state;
+    const { profit } = this.props;
+    if (!profit) {
+      return '';
+    }
+    monthChart.datasets[0].data = profit.totalByMonth;
+    let currentChart = '';
+    if (radioSelected === 2) {
+      monthChart.datasets[0].data = profit.totalByMonth;
+      currentChart = monthChart;
+    }
+    if (radioSelected === 1) {
+      dayChart.datasets[0].data = profit.totalByDay;
+      currentChart = dayChart;
+    }
+    if (radioSelected === 3) {
+      yearChart.datasets[0].data = profit.totalByYear;
+      currentChart = yearChart;
+    }
     return (
       <Container>
         <Row>
@@ -157,7 +253,7 @@ class IncomeStatistic extends React.Component {
                   style={{ height: '400px', marginTop: '40px' }}
                 >
                   <Line
-                    data={monthChart}
+                    data={currentChart}
                     options={mainChartOpts}
                     height={400}
                   />
@@ -171,4 +267,21 @@ class IncomeStatistic extends React.Component {
   }
 }
 
-export default IncomeStatistic;
+function mapState(state) {
+  const { loggingIn } = state.login;
+  const { profit } = state.users;
+  return { loggingIn, profit };
+}
+
+const actionCreators = {
+  login: userActions.login,
+  // logout: userActions.logout
+  getProfit: userActions.getProfit
+};
+
+const connectedComplainDetailPage = connect(
+  mapState,
+  actionCreators
+)(IncomeStatistic);
+
+export default connectedComplainDetailPage;

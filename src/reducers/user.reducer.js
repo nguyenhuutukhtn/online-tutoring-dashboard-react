@@ -62,6 +62,11 @@ const users = (state = {}, action) => {
         ...state,
         complainDetail: action.data
       };
+    case userConstants.GET_PROFIT:
+      return {
+        ...state,
+        profit: action.data
+      };
     default:
       return state;
   }

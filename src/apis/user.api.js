@@ -118,13 +118,24 @@ const requestPolicyDetail = (id, token, cb) => {
     });
 };
 
+function getProfit() {
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  };
+  return fetch(`${constantApi.url}/admin/getAllProfit`, requestOptions)
+    .then(handleResponse)
+    .then(data => data);
+}
+
 const userApis = {
   login,
   listAllUser,
   listAllSkill,
   listAllComplain,
   getDetailComplain,
-  requestPolicyDetail
+  requestPolicyDetail,
+  getProfit
 };
 
 export default userApis;
