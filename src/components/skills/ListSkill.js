@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import React from 'react';
 import { Card, Row, Table, Container, Col, Button } from 'react-bootstrap';
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
@@ -19,7 +20,12 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { connect } from 'react-redux';
 import userActions from '../../actions/user.action';
 import history from '../../helpers/history';
+import constantApi from '../../apis/constants.api';
+
 import './skills.css';
+
+let valueSkill = '';
+let valueAddSKill = '';
 
 class ListSkill extends React.Component {
   constructor(props) {
@@ -27,7 +33,8 @@ class ListSkill extends React.Component {
     this.state = {
       openAddDialog: false,
       openEditDialog: false,
-      skillId: ''
+      skillId: '',
+      openDeleteDialog: false
     };
   }
 
@@ -49,8 +56,16 @@ class ListSkill extends React.Component {
     this.setState({ openEditDialog: true, skillId });
   };
 
+  handleDeleteClick = skillId => {
+    this.setState({ openDeleteDialog: true, skillId });
+  };
+
   handleCloseDialogClick = () => {
-    this.setState({ openAddDialog: false, openEditDialog: false });
+    this.setState({
+      openAddDialog: false,
+      openEditDialog: false,
+      openDeleteDialog: false
+    });
   };
 
   renderListSkill = () => {
@@ -70,7 +85,7 @@ class ListSkill extends React.Component {
             <IconButton onClick={() => this.handleEditClick(skill.id)}>
               <EditIcon style={{ color: '#115292' }} />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => this.handleDeleteClick(skill.id)}>
               <DeleteIcon style={{ color: '#ed4337' }} />
             </IconButton>
           </td>
@@ -98,7 +113,7 @@ class ListSkill extends React.Component {
     }
     return arr.map((elem, index) => {
       return (
-        <PaginationItem className="active">
+        <PaginationItem className={currentPage === index + 1 ? 'active' : ''}>
           <PaginationLink
             onClick={e => this.handlePageCLick(e, index + 1)}
             className="border"
@@ -108,6 +123,28 @@ class ListSkill extends React.Component {
         </PaginationItem>
       );
     });
+  };
+
+  handleUpdateSkill = idSkill => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: idSkill, name: valueSkill })
+    };
+    this.setState({
+      openEditDialog: false
+    });
+    return fetch(`${constantApi.url}/admin/updateTag`, requestOptions).then(
+      () => {
+        window.location.reload(false);
+      }
+    );
+  };
+
+  handleChangeField = e => {
+    valueSkill = e.target.value;
   };
 
   renderEditDialog = () => {
@@ -123,6 +160,7 @@ class ListSkill extends React.Component {
       }
     });
 
+    valueSkill = skillData.name;
     return (
       <Dialog fullWidth open={openEditDialog}>
         <DialogTitle id="form-dialog-title">Chỉnh sữa kĩ năng</DialogTitle>
@@ -136,6 +174,7 @@ class ListSkill extends React.Component {
             type="text"
             fullWidth
             defaultValue={skillData.name}
+            onChange={this.handleChangeField}
           />
         </DialogContent>
         <DialogActions>
@@ -148,10 +187,120 @@ class ListSkill extends React.Component {
           </Button>
           <Button
             //   variant="contained"
+            onClick={() => this.handleUpdateSkill(skillData.id)}
+            color="primary"
+          >
+            Cập nhật
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  handleDeleteSkill = () => {
+    const { skillId } = this.state;
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: skillId })
+    };
+    this.setState({
+      openDeleteDialog: false
+    });
+    return fetch(`${constantApi.url}/admin/deleteTag`, requestOptions).then(
+      () => {
+        window.location.reload(false);
+      }
+    );
+  };
+
+  renderDeleteDialog = () => {
+    const { openDeleteDialog } = this.state;
+
+    return (
+      <Dialog fullWidth open={openDeleteDialog}>
+        <DialogTitle id="form-dialog-title">Chỉnh sữa kĩ năng</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có thực sự muốn xóa kỹ năng này?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
             onClick={() => this.handleCloseDialogClick()}
             color="primary"
           >
-            Thêm
+            Đóng
+          </Button>
+          <Button
+            //   variant="contained"
+            onClick={() => this.handleDeleteSkill()}
+            color="primary"
+          >
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  handleChangeAdd = e => {
+    valueAddSKill = e.target.value;
+  };
+
+  handleAddSkill = () => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name: valueAddSKill })
+    };
+    this.setState({
+      openAddDialog: false
+    });
+    return fetch(`${constantApi.url}/admin/addNewTag`, requestOptions).then(
+      () => {
+        window.location.reload(false);
+      }
+    );
+  };
+
+  renderAddDialog = () => {
+    const { openAddDialog } = this.state;
+    valueAddSKill = '';
+    return (
+      <Dialog fullWidth open={openAddDialog}>
+        <DialogTitle id="form-dialog-title">Thêm kĩ năng mới</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Nhập tên kĩ năng tạo mới.</DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Tên kĩ năng"
+            type="text"
+            fullWidth
+            onChange={this.handleChangeAdd}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="contained"
+            onClick={() => this.handleCloseDialogClick()}
+            color="primary"
+          >
+            Bỏ qua
+          </Button>
+          <Button
+            //   variant="contained"
+            onClick={e => this.handleAddSkill(e)}
+            color="primary"
+          >
+            Thêm mới
           </Button>
         </DialogActions>
       </Dialog>
@@ -159,7 +308,6 @@ class ListSkill extends React.Component {
   };
 
   render() {
-    const { openAddDialog } = this.state;
     return (
       <div>
         <Container>
@@ -210,37 +358,9 @@ class ListSkill extends React.Component {
             </Col>
           </Row>
         </Container>
-        <Dialog fullWidth open={openAddDialog}>
-          <DialogTitle id="form-dialog-title">Thêm kĩ năng mới</DialogTitle>
-          <DialogContent>
-            <DialogContentText>Nhập tên kĩ năng tạo mới.</DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Tên kĩ năng"
-              type="text"
-              fullWidth
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              variant="contained"
-              onClick={() => this.handleCloseDialogClick()}
-              color="primary"
-            >
-              Bỏ qua
-            </Button>
-            <Button
-              //   variant="contained"
-              onClick={() => this.handleCloseDialogClick()}
-              color="primary"
-            >
-              Cập nhật
-            </Button>
-          </DialogActions>
-        </Dialog>
+        {this.renderAddDialog()}
         {this.renderEditDialog()}
+        {this.renderDeleteDialog()}
       </div>
     );
   }
