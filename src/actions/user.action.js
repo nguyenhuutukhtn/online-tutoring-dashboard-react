@@ -71,7 +71,7 @@ function getDetailComplain(id) {
 }
 export const requestPolicyOfStudent = (page, token, cb) => {
   let check = true;
-  let url = 'http://localhost:3200/admin/policy';
+  let url = 'https://smart-tutor-dashboard-server.herokuapp.com/admin/policy';
   const params = {
     p: page
   };
