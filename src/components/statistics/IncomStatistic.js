@@ -151,8 +151,11 @@ class IncomeStatistic extends React.Component {
   }
 
   componentDidMount() {
-    const { getProfit } = this.props;
-    getProfit();
+    const { getProfit, getTopProfitByTutor } = this.props;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
+
+    getProfit(token);
+    getTopProfitByTutor(token);
   }
 
   onRadioBtnClick(radioSelected) {
@@ -269,14 +272,15 @@ class IncomeStatistic extends React.Component {
 
 function mapState(state) {
   const { loggingIn } = state.login;
-  const { profit } = state.users;
-  return { loggingIn, profit };
+  const { profit, profitByTutor } = state.users;
+  return { loggingIn, profit, profitByTutor };
 }
 
 const actionCreators = {
   login: userActions.login,
   // logout: userActions.logout
-  getProfit: userActions.getProfit
+  getProfit: userActions.getProfit,
+  getTopProfitByTutor: userActions.getTopProfitByTutor
 };
 
 const connectedComplainDetailPage = connect(

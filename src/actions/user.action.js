@@ -121,10 +121,21 @@ const requestPolicyDetail = (id, token, cb) => {
 const getProfitAction = data => {
   return { type: userConstants.GET_PROFIT, data };
 };
-function getProfit() {
+function getProfit(token) {
   return dispatch => {
-    userApis.getProfit().then(data => {
+    userApis.getProfit(token).then(data => {
       dispatch(getProfitAction(data));
+    });
+  };
+}
+
+const getTopProfitByTutorAction = data => {
+  return { type: userConstants.GET_PROFIT_TUTOR, data };
+};
+function getTopProfitByTutor(token) {
+  return dispatch => {
+    userApis.getTopProfitByTutor(token).then(data => {
+      dispatch(getTopProfitByTutorAction(data));
     });
   };
 }
@@ -136,7 +147,8 @@ const userActions = {
   listAllComplaint,
   getDetailComplain,
   requestPolicyDetail,
-  getProfit
+  getProfit,
+  getTopProfitByTutor
 };
 
 export default userActions;

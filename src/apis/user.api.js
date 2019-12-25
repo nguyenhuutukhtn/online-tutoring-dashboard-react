@@ -135,16 +135,31 @@ const requestPolicyDetail = (id, token, cb) => {
     });
 };
 
-function getProfit() {
+function getProfit(token) {
   const requestOptions = {
     method: 'GET',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
   };
   return fetch(`${constantApi.url}/admin/getAllProfit`, requestOptions)
     .then(handleResponse)
     .then(data => data);
 }
 
+function getTopProfitByTutor(token) {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+  return fetch(`${constantApi.url}/admin/getTopProfitByTutor`, requestOptions)
+    .then(handleResponse)
+    .then(data => data);
+}
 const userApis = {
   login,
   listAllUser,
@@ -152,7 +167,8 @@ const userApis = {
   listAllComplain,
   getDetailComplain,
   requestPolicyDetail,
-  getProfit
+  getProfit,
+  getTopProfitByTutor
 };
 
 export default userApis;
