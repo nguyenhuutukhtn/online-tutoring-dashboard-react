@@ -121,7 +121,7 @@ class GeneralStatistic extends React.Component {
                       Doanh thu
                     </CardTitle>
                     <span className="h4 font-weight-bold mb-0">
-                      {allInfo.totalProfit[0].total * 1000}K
+                      {allInfo.totalProfit[0].total}K
                     </span>
                   </div>
                   <Col className="col-auto">

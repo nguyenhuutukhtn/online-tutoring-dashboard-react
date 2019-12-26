@@ -234,6 +234,10 @@ class ComplainDetail extends Component {
     const { allMessage } = complainDetail.data[0];
     const { policyData } = complainDetail.data[0];
     const idStudent = policyData[0].id_student;
+    const style = {
+      width: '30px',
+      height: '30px'
+    };
     return allMessage.map(message => {
       if (message.idSender === idStudent) {
         return (
@@ -243,6 +247,7 @@ class ComplainDetail extends Component {
                 src={policyData[0].student_avatar}
                 className="rounded-circle user_img_msg"
                 alt="alt"
+                style={style}
               />
             </div>
             <div className="msg_cotainer">{message.content}</div>
@@ -257,6 +262,7 @@ class ComplainDetail extends Component {
               src={policyData[0].tutor_avatar}
               alt="avatar"
               className="rounded-circle user_img_msg"
+              style={style}
             />
           </div>
         </div>

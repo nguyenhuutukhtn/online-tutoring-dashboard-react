@@ -41,7 +41,7 @@ class TopTutor extends React.Component {
               </Media>
             </Media>
           </th>
-          <td>{tutor.total * 1000}K</td>
+          <td>{tutor.total}K</td>
         </tr>
       );
     });
