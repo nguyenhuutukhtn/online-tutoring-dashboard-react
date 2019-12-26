@@ -160,6 +160,20 @@ function getTopProfitByTutor(token) {
     .then(handleResponse)
     .then(data => data);
 }
+
+function getAllInfo() {
+  const { token } = JSON.parse(localStorage.getItem('userInfo'));
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+  return fetch(`${constantApi.url}/admin/getAllInfo`, requestOptions)
+    .then(handleResponse)
+    .then(data => data);
+}
 const userApis = {
   login,
   listAllUser,
@@ -168,7 +182,8 @@ const userApis = {
   getDetailComplain,
   requestPolicyDetail,
   getProfit,
-  getTopProfitByTutor
+  getTopProfitByTutor,
+  getAllInfo
 };
 
 export default userApis;
