@@ -44,6 +44,7 @@ class ComplainDetail extends Component {
     const idPolicy = complainDetail.data[0].policyData[0].id;
     const idStudent = complainDetail.data[0].policyData[0].id_student;
     const idTutor = complainDetail.data[0].policyData[0].id_teacher;
+    const { token } = JSON.parse(localStorage.getItem('userInfo'));
     const requestOptions = {
       method: 'POST',
       headers: {
